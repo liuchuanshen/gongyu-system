@@ -1,0 +1,244 @@
+<template>
+  <div class="container">
+    <div class="con-map">
+      <div id="container">
+      <!-- <div class="filter">图层过滤</div>
+          <div class="province">广东省</div> -->
+      </div>
+    </div>
+
+    <el-dialog
+      :title="title"
+      :visible.sync="centerDialogVisible"
+      width="30%"
+      center
+    >
+      <div
+        style=" width:100%;
+      height:100%;"
+      >
+        <img
+          :src="src"
+          alt=""
+          style=" width:100%;
+        height:100%;"
+        >
+      </div>
+      <p>房屋类型：{{ houseType }}</p>
+      <p>朝向楼层：{{ floor }} </p>
+      <p>所在小区： {{ kkmc }}</p>
+      <p>在住人口： {{ people }} 人</p>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="success" @click="monitor">实时监控</el-button>
+        <el-button type="danger" @click="centerDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <!-- 监控信息 -->
+    <el-drawer
+      :title="title"
+      :visible.sync="drawer"
+      direction="ttb"
+      :before-close="handleClose"
+    >
+      <div class="video">
+        <div>
+          <video src="./1.mp4" controls="controls" autoplay loop height="230px" />
+        </div>
+        <div>
+          <video src="./1.mp4" controls="controls" autoplay loop height="230px" />
+        </div>
+        <div>
+          <video src="./1.mp4" controls="controls" autoplay loop height="230px" />
+        </div>
+        <div>
+          <video src="./1.mp4" controls="controls" autoplay loop height="230px" />
+        </div>
+      </div>
+    </el-drawer>
+
+  </div>
+</template>
+
+<script>
+
+export default {
+  name: '',
+  data() {
+    return {
+      drawer: null,
+      people: null,
+      houseType: null,
+      floor: null,
+      kkmc: null,
+      src: null,
+      title: null,
+      centerDialogVisible: false,
+      arr: [],
+      map: null,
+      infoBox: null,
+      mapData: [
+        { kkjd: 113.241246, kkwd: 23.431839, kkmc: '融创', photo: 'https://pic1.58cdn.com.cn/anjuke_58/26b4edbe0d8de9d65ee0fb7a1278a129?w=696&h=522&crop=1&t=1&srotate=1&w=640&h=480&crop=1', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
+        { kkjd: 113.232191, kkwd: 23.434293, kkmc: '雪域华府', photo: 'https://pic1.58cdn.com.cn/anjuke_58/a7224c7923f7705a3158bf51dd07f77e?w=696&h=522&crop=1&t=1&srotate=1', houseType: '2室2厅1卫  75 平  精装修', floor: ' 南  中层 / 30层', people: '210' },
+        { kkjd: 113.233844, kkwd: 23.411479, kkmc: '骏壹万邦', photo: 'https://pic1.58cdn.com.cn/anjuke_58/c66e0bc1ff4191a3970091b4a90b7b3f?w=696&h=522&crop=1&t=1&srotate=1', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
+        { kkjd: 113.225256, kkwd: 23.395128, kkmc: '花果山', photo: 'https://pic1.58cdn.com.cn/anjuke_58/26b4edbe0d8de9d65ee0fb7a1278a129?w=696&h=522&crop=1&t=1&srotate=1&w=640&h=480&crop=1', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
+        { kkjd: 113.243043, kkwd: 23.396654, kkmc: '锦尚蓬莱', photo: 'https://pic1.58cdn.com.cn/anjuke_58/7908aeaae1f9b96a9cb66e554d4ef85e?w=696&h=522&crop=1&t=1&srotate=1' },
+        { kkjd: 113.215626, kkwd: 23.403287, kkmc: '茶园雅居', photo: 'https://pic1.58cdn.com.cn/anjuke_58/26b4edbe0d8de9d65ee0fb7a1278a129?w=696&h=522&crop=1&t=1&srotate=1&w=640&h=480&crop=1', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
+        { kkjd: 113.208512, kkwd: 23.401728, kkmc: '松园居', photo: 'https://pic1.58cdn.com.cn/anjuke_58/f95488dd366b641b6f23c98bfd3baad7?w=696&h=522&crop=1&t=1&srotate=1', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
+        { kkjd: 113.221375, kkwd: 23.412175, kkmc: '公益别墅', photo: 'https://pic1.58cdn.com.cn/anjuke_58/26b4edbe0d8de9d65ee0fb7a1278a129?w=696&h=522&crop=1&t=1&srotate=1&w=640&h=480&crop=1', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
+        { kkjd: 113.203697, kkwd: 23.394664, kkmc: '元华新村', photo: 'https://pic1.58cdn.com.cn/anjuke_58/26b4edbe0d8de9d65ee0fb7a1278a129?w=696&h=522&crop=1&t=1&srotate=1&w=640&h=480&crop=1', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
+        { kkjd: 113.232838, kkwd: 23.4072, kkmc: '亚美大厦', photo: 'https://pic1.58cdn.com.cn/anjuke_58/26b4edbe0d8de9d65ee0fb7a1278a129?w=696&h=522&crop=1&t=1&srotate=1&w=640&h=480&crop=1', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
+        { kkjd: 113.208512, kkwd: 23.4072, kkmc: '新景豪苑', photo: 'https://pic1.58cdn.com.cn/anjuke_58/6e273653c8a56aca5261fd256e405807?w=696&h=522&crop=1&t=1&srotate=1&w=640&h=480&crop=1', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
+        { kkjd: 113.228322, kkwd: 23.5072, kkmc: '公寓11', photo: 'https://pic1.58cdn.com.cn/anjuke_58/26b4edbe0d8de9d65ee0fb7a1278a129?w=696&h=522&crop=1&t=1&srotate=1&w=640&h=480&crop=1', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
+        { kkjd: 113.228212, kkwd: 23.4072, kkmc: '钻石花园', photo: 'https://pic1.58cdn.com.cn/anjuke_58/26b4edbe0d8de9d65ee0fb7a1278a129?w=696&h=522&crop=1&t=1&srotate=1&w=640&h=480&crop=1', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
+        { kkjd: 113.248312, kkwd: 23.4072, kkmc: '天幕城', photo: 'https://pic1.58cdn.com.cn/anjuke_58/26b4edbe0d8de9d65ee0fb7a1278a129?w=696&h=522&crop=1&t=1&srotate=1&w=640&h=480&crop=1', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
+        { kkjd: 113.228312, kkwd: 23.4072, kkmc: '钻石花园', photo: 'https://pic1.58cdn.com.cn/anjuke_58/26b4edbe0d8de9d65ee0fb7a1278a129?w=696&h=522&crop=1&t=1&srotate=1&w=640&h=480&crop=1', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' }
+
+      ],
+      jd1: '',
+      wd1: '',
+      jd2: '',
+      wd2: '',
+      container: null,
+      startPoint: '',
+      currentPoint: '',
+      boxContainer: '',
+      pointsArr: [],
+      num: 0,
+      type: null
+    }
+  },
+  mounted() {
+    this.showMap()
+  },
+  methods: {
+
+    /**
+        * 地图展示
+        */
+    showMap() {
+      this.map = new BMap.Map('container')// 对应地图容器id
+      const centerPoint = new BMap.Point(113.227017, 23.409688)
+      this.map.centerAndZoom(centerPoint, 15)
+      this.map.enableScrollWheelZoom(true)
+      this.map.enableDoubleClickZoom(true)
+      this.markerPoint()
+    },
+    /**
+        * 添加地图marker
+      */
+    markerPoint() {
+      this.map.clearOverlays()
+
+      this.mapData.forEach((item, idx) => {
+        const point = new BMap.Point(item.kkjd, item.kkwd) // 将标注点转化成地图上的点
+        const marker = new BMap.Marker(point) // 将点转化成标注点
+        this.map.addOverlay(marker)
+        marker.addEventListener('mouseover', () => {
+          this.markerPointMouseover({ 'line': point, 'item': item })
+        })
+        marker.addEventListener('mouseout', () => {
+          this.map.closeInfoWindow()
+        })
+
+        marker.addEventListener('click', (event) => {
+          console.log(123, item)
+          this.people = item.people
+          this.houseType = item.houseType
+          this.floor = item.floor
+          this.kkmc = item.kkmc
+          this.title = item.kkmc
+          this.src = item.photo
+          this.centerDialogVisible = true
+        })
+      })
+    },
+    /**
+       * 移入marker弹出信息框
+      */
+    markerPointMouseover(data) {
+      const { line, item } = data
+      const html = `<div style="background: #E3F2FD; padding: 10px;font-size: 14px; color: #333333">${item.kkmc}</div>`
+      const opts = {
+        // boxStyle: {
+        width: 210, // 信息窗口宽度
+        height: 0, // 信息窗口高度
+        enableMessage: true, // 设置允许信息窗发送短息
+        message: ''
+      }
+      const infoWindow = new BMap.InfoWindow(html, opts)
+      const point = new BMap.Point(line.lng, line.lat)
+      this.map.openInfoWindow(infoWindow, point)
+    },
+    monitor() {
+      this.drawer = true
+    }
+  }
+}
+</script>
+<style>
+  .bigemap-draw-section{top:200px;left: 0px;}
+  .box-select {
+background: rgba(111, 124, 150, 0.1);
+border: 2px solid #40c0f5;
+position: absolute;
+top: 0;
+left: 0;
+width: 0;
+height: 0;
+z-index: 100;
+}
+</style>
+<style scoped>
+#container{
+  position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100vw;
+        height:100vh;
+}
+.filter{
+          position: absolute;
+          top: 24px;
+          right: 142px;
+          width: 108px;
+          height: 32px;
+          color: #ffffff;
+          line-height: 32px;
+          text-align: center;
+          background-color: #0179f9;
+          border-radius: 4px;
+      }
+      .filter:hover{
+          background-color: #58bc58;
+      }
+      .province{
+          position: absolute;
+          top: 24px;
+          right: 24px;
+          width: 94px;
+          height: 32px;
+          color: #ffffff;
+          line-height: 32px;
+          text-align: center;
+          background-color: #0179f9;
+          border-radius: 4px;
+      }
+      .province:hover{
+          background-color: #58bc58;
+      }
+      .video{
+        display: flex;
+        justify-content: space-around;
+        padding: 10px;
+      }
+
+    /deep/ .el-drawer{
+      background-color:#304156;
+      height: 40% !important;
+    }
+    /deep/ .el-drawer__header{
+      color: #fff;
+    }
+</style>
