@@ -104,7 +104,6 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
-
   chartsRouter,
   // componentsRouter,
   nestedRouter,
@@ -130,7 +129,11 @@ export const asyncRoutes = [
         path: 'edit/:id(\\d+)',
         component: () => import('@/views/example/edit'),
         name: 'EditArticle',
-        meta: { title: 'Edit Article', noCache: true, activeMenu: '/example/list' },
+        meta: {
+          title: 'Edit Article',
+          noCache: true,
+          activeMenu: '/example/list'
+        },
         hidden: true
       },
       {
@@ -151,6 +154,18 @@ export const asyncRoutes = [
         component: () => import('@/views/tab/index'),
         name: 'Tab',
         meta: { title: '水电费管理', icon: 'tab' }
+      }
+    ]
+  },
+  {
+    path: '/password',
+    component: Layout,
+    children: [
+      {
+        path: 'manage',
+        component: () => import('@/views/passManage/index'),
+        name: 'Password',
+        meta: { title: '密码管理', icon: 'password' }
       }
     ]
   },
@@ -326,11 +341,12 @@ export const asyncRoutes = [
   { path: '*', redirect: '/404', hidden: true }
 ]
 
-const createRouter = () => new Router({
-  // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
-})
+const createRouter = () =>
+  new Router({
+    // mode: 'history', // require service support
+    scrollBehavior: () => ({ y: 0 }),
+    routes: constantRoutes
+  })
 
 const router = createRouter()
 
