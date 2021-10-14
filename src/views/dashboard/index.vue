@@ -23,8 +23,19 @@ export default {
     ])
   },
   created() {
+    this.getPath()
     if (!this.roles.includes('admin')) {
       this.currentRole = 'editorDashboard'
+    }
+  },
+  methods: {
+    getPath() {
+      console.log(this.$route.path, '13123123')
+
+      if (this.$route.path === '/dashboard') {
+        this.$bus.$emit('MessageBox')
+        console.log('1')
+      }
     }
   }
 }

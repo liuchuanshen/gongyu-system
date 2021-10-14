@@ -23,7 +23,7 @@
             <div class="card-panel-text">
               留言箱
             </div>
-            <count-to :start-val="0" :end-val="123" :duration="3000" class="card-panel-num" />
+            <count-to :start-val="0" :end-val="MessageBox" :duration="3000" class="card-panel-num" />
           </div>
         </div>
       </el-col>
@@ -61,11 +61,13 @@
       direction="rtl"
     >
       <el-collapse v-model="activeName" accordion>
-        <el-collapse-item v-for="(item,idx) in msg" :key="idx" :title="item.name" :name="idx">
+        <el-collapse-item v-for="(item,idx) in todolist" :key="item.id" :title="item.name" :name="idx">
           <div class="msg">
             <div>{{ item.msg }}</div>
             <div>{{ item.time }}</div>
-            <el-link type="primary">添加到待办事项</el-link>
+            <el-link type="primary" @click="update(item)">
+              添加到待办事项
+            </el-link>
           </div>
         </el-collapse-item>
       </el-collapse>
@@ -85,66 +87,62 @@ export default {
     return {
       activeName: '1',
       drawer: null,
-      msg: [
-        { msg: '房东我的水管爆了', name: '刘XX ', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
-        { msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' }
-      ]
+      todolist: [],
+      MessageBox: JSON.parse(localStorage.getItem('todolist')).length
     }
+  },
+  mounted() {
+    this.$bus.$on('MessageBox', () => {
+      this.MessageBox = JSON.parse(localStorage.getItem('todolist')).length
+    })
   },
   methods: {
     handleSetLineChartData(type) {
       this.$emit('handleSetLineChartData', type)
 
       if (type === 'messages') {
-        this.drawer = true
+        this.msg = [
+          { id: '1', msg: '房东我的水管爆了', name: '刘XX ', time: '2021-7-1' },
+          { id: '2', msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
+          { id: '3', msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
+          { id: '4', msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
+          { id: '5', msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' },
+          { id: '6', msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1' }
+        ]
+        if (localStorage.getItem('todolist')) {
+          this.todolist = JSON.parse(localStorage.getItem('todolist'))
+          this.drawer = true
+        } else {
+          localStorage.setItem('todolist', JSON.stringify(this.msg))
+          this.todolist = JSON.parse(localStorage.getItem('todolist'))
+          this.drawer = true
+        }
       }
+    },
+    update(item) {
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        const res = this.todolist.filter((res) => {
+          if (item.id !== res.id) {
+            return res
+          }
+        })
+
+        localStorage.setItem('todolist', JSON.stringify(res))
+        this.$message({
+          type: 'success',
+          message: '添加到代办事项成功！'
+        })
+        this.todolist = JSON.parse(localStorage.getItem('todolist'))
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     }
   }
 }

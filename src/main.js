@@ -17,9 +17,11 @@ import router from './router'
 import './icons' // icon
 import './permission' // permission control
 import './utils/error-log' // error log
+import Bus from './utils/bus.js'
 
 import * as filters from './filters' // global filters
 
+Vue.use(Bus)
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
