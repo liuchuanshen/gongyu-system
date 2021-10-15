@@ -1,14 +1,27 @@
 <template>
   <div class="app-container">
-    <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%;">
+    <el-table
+      v-skeleton="{ loading: this.listLoading, rows: 10 }"
+      v-loading="listLoading"
+      :data="list"
+      border
+      fit
+      highlight-current-row
+      style="width: 100%;"
+    >
       <el-table-column align="center" label="序号" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" class-name="status-col" label="房号" width="110">
-        <template slot-scope="{row}">
+      <el-table-column
+        align="center"
+        class-name="status-col"
+        label="房号"
+        width="110"
+      >
+        <template slot-scope="{ row }">
           <el-tag :type="row.status | statusFilter">
             {{ row.fh }}
           </el-tag>
@@ -40,7 +53,12 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" class-name="status-col" label="手机号码" width="200">
+      <el-table-column
+        align="center"
+        class-name="status-col"
+        label="手机号码"
+        width="200"
+      >
         <template slot-scope="scope">
           <!-- <el-tag :type="row.status | statusFilter"> -->
           <span>{{ scope.row.sjhm }}</span>
@@ -58,23 +76,47 @@
 
       <el-table-column align="center" width="150px" label="缴费情况">
         <template slot-scope="scope">
-          <span v-if="scope.row.jfqk==='y'" style="color: #58bc58;">缴费正常</span>
-          <span v-if="scope.row.jfqk==='n'" style="color: red;">欠费状态</span>
+          <span
+            v-if="scope.row.jfqk === 'y'"
+            style="color: #58bc58;"
+          >缴费正常</span>
+          <span
+            v-if="scope.row.jfqk === 'n'"
+            style="color: red;"
+          >欠费状态</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="操作" width="200">
         <template slot-scope="scope">
-          <el-button v-if="scope.row.jfqk==='y'" type="primary" size="small" icon="el-icon-edit" @click="write(scope.row)">
+          <el-button
+            v-if="scope.row.jfqk === 'y'"
+            type="primary"
+            size="small"
+            icon="el-icon-edit"
+            @click="write(scope.row)"
+          >
             编辑
           </el-button>
-          <el-button v-if="scope.row.jfqk==='n'" type="danger" size="small" icon="el-icon-warning-outline" @click="write(scope.row)">
+          <el-button
+            v-if="scope.row.jfqk === 'n'"
+            type="danger"
+            size="small"
+            icon="el-icon-warning-outline"
+            @click="write(scope.row)"
+          >
             查看
           </el-button>
         </template>
       </el-table-column>
     </el-table>
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+    <pagination
+      v-show="total > 0"
+      :total="total"
+      :page.sync="listQuery.page"
+      :limit.sync="listQuery.limit"
+      @pagination="getList"
+    />
 
     <el-dialog
       title="租户信息"
@@ -114,20 +156,25 @@
           </div>
           <div>
             <div>缴费情况:</div>
-            <div v-if="rows.jfqk==='y'" style="color: #58bc58;">缴费正常</div>
-            <div v-if="rows.jfqk==='n'" style="color: red;">欠费状态</div>
+            <div v-if="rows.jfqk === 'y'" style="color: #58bc58;">缴费正常</div>
+            <div v-if="rows.jfqk === 'n'" style="color: red;">欠费状态</div>
           </div>
         </div>
         <div class="right">
-          <img src="https://img0.baidu.com/it/u=1565151598,3258818133&fm=26&fmt=auto&gp=0.jpg" alt="">
+          <img
+            src="https://img0.baidu.com/it/u=1565151598,3258818133&fm=26&fmt=auto&gp=0.jpg"
+            alt=""
+          >
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button
+          type="primary"
+          @click="dialogVisible = false"
+        >确 定</el-button>
       </span>
     </el-dialog>
-
   </div>
 </template>
 
@@ -162,7 +209,10 @@ export default {
     }
   },
   created() {
-    this.getList()
+    setTimeout(() => {
+      this.getList()
+      this.loading = false
+    }, 2000)
   },
   methods: {
     getList() {
@@ -197,19 +247,19 @@ export default {
   right: 15px;
   top: 10px;
 }
-.info{
+.info {
   display: flex;
-  .left{
+  .left {
     /* display: flex; */
     width: 80%;
-    div{
+    div {
       display: flex;
     }
   }
-  .right{
+  .right {
     width: 20%;
     height: 100px;
-    img{
+    img {
       width: 100%;
       height: 100px;
     }

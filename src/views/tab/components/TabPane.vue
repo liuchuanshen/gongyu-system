@@ -1,7 +1,15 @@
 <template>
-  <el-table :data="list" border fit highlight-current-row style="width: 100%">
+  <el-table
+    v-skeleton="{ loading: this.loading, rows: 10 }"
+    v-loading="this.loading"
+    :data="list"
+    border
+    fit
+    highlight-current-row
+    style="width: 100%"
+  >
     <el-table-column
-      v-loading="loading"
+      v-loading="this.loading"
       align="center"
       label="ID"
       width="65"
@@ -32,7 +40,7 @@
 
     <el-table-column width="180px" align="center" label="今月费用">
       <template slot-scope="scope">
-        <span>{{ scope.row.jysf ||scope.row.jydf||scope.row.jywf }}</span>
+        <span>{{ scope.row.jysf || scope.row.jydf || scope.row.jywf }}</span>
       </template>
     </el-table-column>
 
@@ -44,9 +52,17 @@
 
     <el-table-column width="180px" align="center" label="操作">
       <template slot-scope="scope">
-
-        <el-button v-if="scope.row.status==='y'" type="success" plain @click="pay(scope)">发送账单</el-button>
-        <el-button v-if="scope.row.status==='n'" type="danger" plain>已发送账单</el-button>
+        <el-button
+          v-if="scope.row.status === 'y'"
+          type="success"
+          plain
+          @click="pay(scope)"
+        >发送账单</el-button>
+        <el-button
+          v-if="scope.row.status === 'n'"
+          type="danger"
+          plain
+        >已发送账单</el-button>
       </template>
     </el-table-column>
 
@@ -107,11 +123,13 @@ export default {
         type: this.type
         // sort: '+id'
       },
-      loading: false
+      loading: true
     }
   },
   created() {
-    this.getList()
+    setTimeout(() => {
+      this.getList()
+    }, 2000)
   },
   methods: {
     getList() {
@@ -127,19 +145,20 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '发送成功!'
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消'
-        })
       })
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '发送成功!'
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          })
+        })
     }
   }
 }
 </script>
-

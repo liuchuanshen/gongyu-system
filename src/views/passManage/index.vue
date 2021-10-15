@@ -1,14 +1,16 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-14 10:35:23
- * @LastEditTime: 2021-10-14 14:22:00
+ * @LastEditTime: 2021-10-15 10:19:42
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \gongyu-system\src\views\passManage\index.vue
 -->
+
 <template>
   <div class="app-container">
     <el-table
+      v-skeleton="{ loading: listLoading, rows: 10 }"
       v-loading="listLoading"
       :data="list"
       border
@@ -136,11 +138,12 @@ export default {
     }
   },
   created() {
-    this.getList()
+    setTimeout(() => {
+      this.getList()
+    }, 2000)
   },
   methods: {
     resetPass(row) {
-      console.log(row)
       this.$confirm('此操作将重置为默认密码, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
