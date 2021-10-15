@@ -60,27 +60,27 @@
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Date" width="200px" align="center">
+      <el-table-column label="时间" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.rzsj }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="姓名">
+      <el-table-column label="姓名" align="center">
         <template slot-scope="{ row }">
           <span class="link-type" @click="handleUpdate(row)">{{ row.xm }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="身份证号码" width="200px" align="center">
+      <el-table-column label="身份证号码" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.sfzhm }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="sjhm" width="200px" align="center">
+      <el-table-column label="手机号码" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.sjhm }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Status" class-name="status-col" width="200px">
+      <el-table-column label="缴费情况" class-name="status-col">
         <template slot-scope="{ row }">
           <el-tag v-if="row.jfqk === 'y'">
             缴费正常
@@ -91,23 +91,30 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="Actions"
+        label="操作"
         align="center"
-        width="300"
         class-name="small-padding fixed-width"
       >
         <template slot-scope="{ row, $index }">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
+          <el-button
+            type="primary"
+            size="mini"
+            style="marginRight:20px"
+            @click="handleUpdate(row)"
+          >
             编辑
           </el-button>
-          <el-button
-            v-if="row.status != 'deleted'"
-            size="mini"
-            type="danger"
-            @click="handleDelete(row, $index)"
+          <el-popconfirm
+            title="确认退房吗？"
+            @onConfirm="handleDelete(row, $index)"
           >
-            退房
-          </el-button>
+            <el-button
+              v-if="row.status != 'deleted'"
+              slot="reference"
+              size="mini"
+              type="danger"
+            >退房</el-button>
+          </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
@@ -120,7 +127,7 @@
       @pagination="getList"
     />
 
-    <el-dialog title="新增" :visible.sync="dialogFormVisible">
+    <el-dialog title="编辑" :visible.sync="dialogFormVisible">
       <el-form
         ref="dataForm"
         :model="temp"
@@ -148,7 +155,7 @@
         <el-form-item label="手机号码" prop="sjhm">
           <el-input v-model="temp.sjhm" />
         </el-form-item>
-        <el-form-item label="押金缴费情况" prop="jfqk">
+        <el-form-item label="缴费情况" prop="jfqk" style="marginRight:20px">
           <el-radio v-model="temp.jfqk" label="y">已交</el-radio>
           <el-radio v-model="temp.jfqk" label="n">未交</el-radio>
         </el-form-item>
@@ -374,8 +381,8 @@ export default {
             this.list.splice(index, 1, this.temp)
             this.dialogFormVisible = false
             this.$notify({
-              title: 'Success',
-              message: 'Update Successfully',
+              title: '提示',
+              message: '修改成功',
               type: 'success',
               duration: 2000
             })
@@ -384,9 +391,10 @@ export default {
       })
     },
     handleDelete(row, index) {
+      console.log(666)
       this.$notify({
-        title: 'Success',
-        message: 'Delete Successfully',
+        title: '提示',
+        message: '退房成功',
         type: 'success',
         duration: 2000
       })

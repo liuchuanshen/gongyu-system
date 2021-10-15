@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-14 10:35:23
- * @LastEditTime: 2021-10-15 10:19:42
+ * @LastEditTime: 2021-10-15 15:34:55
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \gongyu-system\src\views\passManage\index.vue
@@ -16,7 +16,7 @@
       border
       fit
       highlight-current-row
-      style="width: 100%;"
+      style="width: 100%; overflow-y:hidden;"
     >
       <el-table-column align="center" label="序号" width="80">
         <template slot-scope="scope">
@@ -37,37 +37,32 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="120px" align="center" label="姓名">
+      <el-table-column align="center" label="姓名">
         <template slot-scope="scope">
           <span>{{ scope.row.xm }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="180px" align="center" label="入住时间">
+      <el-table-column align="center" label="入住时间">
         <template slot-scope="scope">
           <span>{{ scope.row.rzsj }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="180px" align="center" label="租约时间">
+      <el-table-column align="center" label="租约时间">
         <template slot-scope="scope">
           <span>{{ scope.row.zysj }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" width="200px" label="房间密码">
+      <el-table-column align="center" label="房间密码">
         <template slot-scope="scope">
           <!-- <svg-icon v-for="n in +scope.row.importance" :key="n" icon-class="star" class="meta-item__icon" /> -->
           <span>{{ scope.row.csmm }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column
-        align="center"
-        class-name="status-col"
-        label="手机号码"
-        width="200"
-      >
+      <el-table-column align="center" class-name="status-col" label="手机号码">
         <template slot-scope="scope">
           <!-- <el-tag :type="row.status | statusFilter"> -->
           <span>{{ scope.row.sjhm }}</span>
@@ -232,6 +227,9 @@ export default {
       width: 100%;
       height: 100px;
     }
+  }
+  .el-table__body-wrapper {
+    overflow: hidden;
   }
 }
 </style>
