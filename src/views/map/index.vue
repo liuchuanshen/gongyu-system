@@ -56,6 +56,10 @@
           <video src="./1.mp4" controls="controls" autoplay loop height="230px" />
         </div>
       </div>
+
+      
+
+
     </el-drawer>
 
   </div>
