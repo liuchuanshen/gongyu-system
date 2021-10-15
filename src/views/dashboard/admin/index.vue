@@ -4,9 +4,9 @@
 
     <panel-group @handleSetLineChartData="handleSetLineChartData" />
 
-    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+    <!-- <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <line-chart :chart-data="lineChartData" />
-    </el-row>
+    </el-row> -->
 
     <!-- <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :lg="8">
@@ -41,12 +41,12 @@
 </template>
 
 <script>
-import GithubCorner from '@/components/GithubCorner'
+// import GithubCorner from '@/components/GithubCorner'
 import PanelGroup from './components/PanelGroup'
-import LineChart from './components/LineChart'
-import RaddarChart from './components/RaddarChart'
-import PieChart from './components/PieChart'
-import BarChart from './components/BarChart'
+// import LineChart from './components/LineChart'
+// import RaddarChart from './components/RaddarChart'
+// import PieChart from './components/PieChart'
+// import BarChart from './components/BarChart'
 import TransactionTable from './components/TransactionTable'
 import TodoList from './components/TodoList'
 import BoxCard from './components/BoxCard'
@@ -73,12 +73,12 @@ const lineChartData = {
 export default {
   name: 'DashboardAdmin',
   components: {
-    GithubCorner,
+    // GithubCorner,
     PanelGroup,
-    LineChart,
-    RaddarChart,
-    PieChart,
-    BarChart,
+    // LineChart,
+    // RaddarChart,
+    // PieChart,
+    // BarChart,
     TransactionTable,
     TodoList,
     BoxCard
@@ -101,6 +101,7 @@ export default {
   padding: 32px;
   background-color: rgb(240, 242, 245);
   position: relative;
+  height: calc(100vh - 90px);
 
   .github-corner {
     position: absolute;

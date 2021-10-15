@@ -5,7 +5,7 @@ import Layout from '@/layout'
 const nestedRouter = {
   path: '/nested',
   component: Layout,
-  redirect: '/nested/menu1/menu1-1',
+  redirect: '/nested/list',
   name: 'Nested',
   meta: {
     title: '代办事项',
@@ -13,8 +13,8 @@ const nestedRouter = {
   },
   children: [
     {
-      path: '/nested/menu1/menu1-1',
-      component: () => import('@/views/nested/menu1/menu1-1'),
+      path: '/nested/list',
+      component: () => import('@/views/nested/list'),
       name: 'house',
       meta: { title: '代办事项' }
     }
