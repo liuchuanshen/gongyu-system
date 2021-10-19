@@ -120,7 +120,7 @@ export default {
       }
     },
     update(item) {
-      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+      this.$confirm('将该条数据转入待办事项, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -146,13 +146,13 @@ export default {
 
         this.$message({
           type: 'success',
-          message: '添加到代办事项成功！'
+          message: '添加到待办事项成功！'
         })
         this.todolist = JSON.parse(localStorage.getItem('todolist'))
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '已取消删除'
+          message: '已取消添加'
         })
       })
     }

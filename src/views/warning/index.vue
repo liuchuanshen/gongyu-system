@@ -9,7 +9,7 @@
       highlight-current-row
       style="width: 100%;"
     >
-      <el-table-column align="center" label="序号" width="80">
+      <el-table-column align="center" label="预警时间" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
@@ -28,21 +28,15 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="120px" align="center" label="姓名">
+      <el-table-column width="120px" align="center" label="预警地点">
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="事项">
+      <el-table-column align="center" label="预警情况">
         <template slot-scope="scope">
           <span>{{ scope.row.msg }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column width="180px" align="center" label="反馈时间">
-        <template slot-scope="scope">
-          <span>{{ scope.row.time }}</span>
         </template>
       </el-table-column>
 
@@ -68,7 +62,7 @@
             icon="el-icon-edit"
             @click="write(scope.row)"
           >
-            派单
+            下达命令
           </el-button>
           <!-- <el-button
             v-if="scope.row.jfqk === 'n'"
@@ -152,10 +146,8 @@
 </template>
 
 <script>
+// import { fetchList } from '@/api/article'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
-import {
-  fetchMsg
-} from '@/api/article'
 
 export default {
   name: 'ArticleList',
@@ -219,15 +211,10 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      console.log(' 123123123321')
-
-      fetchMsg(this.listQuery).then(response => {
-        console.log(' response', response)
-        // this.list = response.data.items
-        // this.temp.id = this.list.length + 1
-        // this.total = response.data.total
-        // this.listLoading = false
-      })
+      if (localStorage.getItem('todolist-success')) {
+        this.list = JSON.parse(localStorage.getItem('todolist-success'))
+        this.total = JSON.parse(localStorage.getItem('todolist-success')).length
+      }
       this.listLoading = false
     },
     handleClose(done) {

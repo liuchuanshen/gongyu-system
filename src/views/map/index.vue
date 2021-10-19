@@ -30,6 +30,7 @@
       <p>在住人口： {{ people }} 人</p>
       <span slot="footer" class="dialog-footer">
         <el-button type="success" @click="monitor">实时监控</el-button>
+        <el-button type="success" @click="monitor">设备情况</el-button>
         <el-button type="danger" @click="centerDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
       </span>
@@ -56,9 +57,6 @@
           <video src="./1.mp4" controls="controls" autoplay loop height="230px" />
         </div>
       </div>
-
-      
-
 
     </el-drawer>
 

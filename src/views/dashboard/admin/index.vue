@@ -88,6 +88,9 @@ export default {
       lineChartData: lineChartData.newVisitis
     }
   },
+  created() {
+
+  },
   methods: {
     handleSetLineChartData(type) {
       this.lineChartData = lineChartData[type]
