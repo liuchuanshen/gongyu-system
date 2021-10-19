@@ -20,37 +20,37 @@
       </template>
     </el-table-column>
 
-    <el-table-column width="180px" align="center" label=" 房号">
+    <el-table-column align="center" label=" 房号">
       <template slot-scope="scope">
         <span>{{ scope.row.fh }}</span>
       </template>
     </el-table-column>
 
-    <el-table-column width="180px" align="center" label="上月费用">
+    <el-table-column align="center" label="上月费用">
       <template slot-scope="scope">
         <span>{{ scope.row.sysf || scope.row.sydf || scope.row.sywf }}</span>
       </template>
     </el-table-column>
 
-    <el-table-column width="180px" align="center" label="上月度数">
+    <el-table-column align="center" label="上月度数">
       <template slot-scope="scope">
         <span>{{ scope.row.syds }}</span>
       </template>
     </el-table-column>
 
-    <el-table-column width="180px" align="center" label="今月费用">
+    <el-table-column align="center" label="今月费用">
       <template slot-scope="scope">
         <span>{{ scope.row.jysf || scope.row.jydf || scope.row.jywf }}</span>
       </template>
     </el-table-column>
 
-    <el-table-column width="180px" align="center" label="今月度数">
+    <el-table-column align="center" label="今月度数">
       <template slot-scope="scope">
         <span>{{ scope.row.jyds }}</span>
       </template>
     </el-table-column>
 
-    <el-table-column width="180px" align="center" label="操作">
+    <el-table-column align="center" label="操作">
       <template slot-scope="scope">
         <el-button
           v-if="scope.row.status === 'y'"

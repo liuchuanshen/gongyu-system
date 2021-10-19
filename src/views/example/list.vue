@@ -87,7 +87,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="操作" width="200">
+      <el-table-column align="center" label="操作" width="210" fixed="right">
         <template slot-scope="scope">
           <el-button
             v-if="scope.row.jfqk === 'y'"
@@ -127,37 +127,82 @@
       <div class="info">
         <div class="left">
           <div>
-            <div>房号:</div>
-            <div>{{ rows.fh }}</div>
+            <label
+              style="lineHeight:35px;marginRight:52px;marginBottom:10px"
+            >房号:</label>
+            <el-input v-model="rows.fh" style="width:200px" />
           </div>
           <div>
-            <div>姓名:</div>
-            <div>{{ rows.xm }}</div>
+            <label
+              style="lineHeight:35px;marginRight:52px;marginBottom:10px"
+            >姓名:</label>
+            <el-input v-model="rows.xm" style="width:200px" />
           </div>
           <div>
-            <div>入住时间:</div>
-            <div>{{ rows.rzsj }}</div>
+            <label
+              style="lineHeight:35px;marginRight:24px;marginBottom:10px"
+            >入住时间:</label>
+            <el-date-picker
+              v-model="rows.rzsj"
+              type="date"
+              placeholder="选择日期"
+              style="width:200px"
+              format="yyyy 年 MM 月 dd 日"
+              value-format="yyyy-MM-dd"
+            />
           </div>
           <div>
-            <div>租约时间:</div>
-            <div>{{ rows.zysj }}</div>
+            <label
+              style="lineHeight:35px;marginRight:24px;marginBottom:10px"
+            >租约时间:</label>
+            <el-date-picker
+              v-model="rows.zysj"
+              type="date"
+              placeholder="选择日期"
+              style="width:200px;"
+              format="yyyy 年 MM 月 dd 日"
+              value-format="yyyy-MM-dd"
+            />
           </div>
           <div>
-            <div>身份证号码:</div>
-            <div>{{ rows.sfzhm }}</div>
+            <label
+              style="lineHeight:35px;marginRight:10px;marginBottom:10px"
+            >身份证号码:</label>
+            <el-input v-model="rows.sfzhm" style="width:200px" />
           </div>
           <div>
-            <div>手机号码:</div>
-            <div>{{ rows.sjhm }}</div>
+            <label
+              style="lineHeight:35px;marginRight:24px;marginBottom:10px"
+            >手机号码:</label>
+            <el-input v-model="rows.sjhm" style="width:200px" />
           </div>
           <div>
-            <div>户型:</div>
-            <div>{{ rows.hx }}</div>
+            <label
+              style="lineHeight:35px;marginRight:52px;marginBottom:10px"
+            >户型:</label>
+            <el-select v-model="rows.hx" placeholder="请选择">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+            <!-- <el-input v-model="rows.hx" style="width:200px"></el-input> -->
           </div>
           <div>
-            <div>缴费情况:</div>
-            <div v-if="rows.jfqk === 'y'" style="color: #58bc58;">缴费正常</div>
-            <div v-if="rows.jfqk === 'n'" style="color: red;">欠费状态</div>
+            <label
+              style="lineHeight:35px;marginRight:32px;marginBottom:10px"
+            >缴费情况:</label>
+            <div
+              v-if="rows.jfqk === 'y'"
+              style="color: #58bc58;lineHeight:35px"
+            >
+              缴费正常
+            </div>
+            <div v-if="rows.jfqk === 'n'" style="color: red;lineHeight:35px">
+              欠费状态
+            </div>
           </div>
         </div>
         <div class="right">
@@ -205,7 +250,30 @@ export default {
         page: 1,
         limit: 10
       },
-      rows: {}
+      rows: {},
+      options: [
+        {
+          value: '单间',
+          label: '单间'
+        },
+        {
+          value: '一房一厅',
+          label: '一房一厅'
+        },
+        {
+          value: '两房一厅',
+          label: '两房一厅'
+        },
+        {
+          value: '三房一厅',
+          label: '三房一厅'
+        },
+        {
+          value: '三房两厅',
+          label: '三房两厅'
+        }
+      ],
+      value: ''
     }
   },
   created() {
