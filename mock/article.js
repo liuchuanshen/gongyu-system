@@ -115,9 +115,6 @@ module.exports = [
     type: 'get',
     response: config => {
       const {id} = config.query
-      // console.log('id',id)
-      // console.log('messageBox',messageBox)
-
       messageBox.forEach((item)=>{
         if(item.id===id){
           todolist.push(item)

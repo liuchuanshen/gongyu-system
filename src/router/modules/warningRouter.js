@@ -9,7 +9,7 @@ const warningRouter = {
   name: 'Warning',
   meta: {
     title: 'Warning',
-    icon: 'Warning'
+    icon: 'table'
   },
   children: [
     // {
