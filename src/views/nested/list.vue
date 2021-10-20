@@ -154,7 +154,7 @@
 <script>
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import {
-  fetchMsg
+  fetchSuccessMsg
 } from '@/api/article'
 
 export default {
@@ -219,14 +219,12 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      console.log(' 123123123321')
-
-      fetchMsg(this.listQuery).then(response => {
-        console.log(' response', response)
-        // this.list = response.data.items
-        // this.temp.id = this.list.length + 1
-        // this.total = response.data.total
-        // this.listLoading = false
+      fetchSuccessMsg(this.listQuery).then(response => {
+        // console.log(' response', response)
+        this.list = response.data.items
+        this.temp.id = this.list.length + 1
+        this.total = response.data.total
+        this.listLoading = false
       })
       this.listLoading = false
     },

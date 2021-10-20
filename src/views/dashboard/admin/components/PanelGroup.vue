@@ -53,6 +53,15 @@
           </div>
         </div>
       </el-col>
+       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+        <div class="card-panel" @click="handleSetLineChartData('watch')">
+          <div class="card-panel-description-other">
+            <div class="card-panel-text">
+              租客看房
+            </div>
+          </div>
+        </div>
+      </el-col>
     </el-row>
 
     <el-drawer
@@ -72,6 +81,45 @@
         </el-collapse-item>
       </el-collapse>
     </el-drawer>
+    <el-dialog title="租客看房" :visible.sync="watch">
+        <el-form :model="form">
+          <el-form-item label="门禁密码" :label-width="formLabelWidth">
+            <el-input v-model="form.doorpassword" autocomplete="off" style="width:200px"></el-input>
+          </el-form-item>
+           <el-form-item label="门禁密码有效时间" :label-width="formLabelWidth">
+           <div class="block">
+              <el-slider
+                v-model="time"  show-input>
+              </el-slider>
+            </div>
+          </el-form-item>
+          <el-form-item label="房号" :label-width="formLabelWidth">
+            <el-select v-model="form.houseId" placeholder="请选择活动区域">
+               <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="房间密码" :label-width="formLabelWidth">
+              <el-input v-model="form.password" autocomplete="off" style="width:200px"></el-input>
+          </el-form-item>
+          <el-form-item label="密码有效时间" :label-width="formLabelWidth">
+           <div class="block">
+              <el-slider
+                v-model="time"  show-input>
+              </el-slider>
+            </div>
+          </el-form-item>
+        </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="watch = false">取 消</el-button>
+        <el-button type="primary" @click="watch = false">确 定</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 
 </template>
@@ -86,8 +134,32 @@ export default {
   },
   data() {
     return {
+      time:'',
+      formLabelWidth: '150px',
+      form: {
+          houseId: '',
+          password:'',
+          doorpassword:''
+        },
+      options: [{
+          value: '1',
+          label: '101'
+        }, {
+          value: '2',
+          label: '102'
+        }, {
+          value: '3',
+          label: '103'
+        }, {
+          value: '4',
+          label: '104'
+        }, {
+          value: '5',
+          label: '105'
+      }],
       activeName: '1',
       drawer: null,
+      watch:null,
       todolist: [],
       MessageBox: null
     }
@@ -104,22 +176,8 @@ export default {
 
       if (type === 'messages') {
           this.drawer = true
-        // this.msg = [
-        //   { id: '1', msg: '房东我的水管爆了', name: '刘XX ', time: '2021-7-1', fh: '101', status: 'wcl' },
-        //   { id: '2', msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1', fh: '102', status: 'wcl' },
-        //   { id: '3', msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1', fh: '201', status: 'wcl' },
-        //   { id: '4', msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1', fh: '202', status: 'wcl' },
-        //   { id: '5', msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1', fh: '301', status: 'wcl' },
-        //   { id: '6', msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1', fh: '302', status: 'wcl' }
-        // ]
-        // if (localStorage.getItem('todolist')) {
-        //   this.todolist = JSON.parse(localStorage.getItem('todolist'))
-        //   this.drawer = true
-        // } else {
-        //   localStorage.setItem('todolist', JSON.stringify(this.msg))
-        //   this.todolist = JSON.parse(localStorage.getItem('todolist'))
-        //   this.drawer = true
-        // }
+      }else if(type==='watch'){
+        this.watch=true
       }
     },
     update(item) {
@@ -236,6 +294,27 @@ export default {
 
       .card-panel-num {
         font-size: 20px;
+      }
+    }
+
+    .card-panel-description-other{
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      .card-panel-text {
+        line-height: 18px;
+        color: rgba(0, 0, 0, 0.45);
+        font-size: 32px;
+        margin-bottom: 12px;
+      }
+    }
+
+   .card-panel-description-other:hover{
+     background-color: #36a3f7;
+      .card-panel-text {
+        color: #fff;
       }
     }
   }
