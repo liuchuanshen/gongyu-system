@@ -8,7 +8,7 @@
 import { mapGetters } from 'vuex'
 import adminDashboard from './admin'
 import editorDashboard from './editor'
-import {fetchWarningMsg} from '@/api/article'
+import { fetchWarningMsg } from '@/api/article'
 // import { testURL } from 'jest.config'
 export default {
   name: 'Dashboard',
@@ -16,10 +16,10 @@ export default {
   data() {
     return {
       currentRole: 'adminDashboard',
-       listQuery: {
+      listQuery: {
         page: 1,
         limit: 10
-      },
+      }
     }
   },
   computed: {
@@ -43,10 +43,10 @@ export default {
     getList() {
       this.listLoading = true
       fetchWarningMsg(this.listQuery).then(response => {
-        console.log('list',response)
-        this.$bus.$emit('MessageBox',response.data)
+        console.log('list', response)
+        this.$bus.$emit('MessageBox', response.data)
       })
-    },
+    }
   }
 }
 </script>

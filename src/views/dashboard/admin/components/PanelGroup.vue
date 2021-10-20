@@ -129,6 +129,7 @@
 <script>
 import CountTo from 'vue-count-to'
 import { fetchSuccessMsg } from '@/api/article'
+import { getlist } from '@/api/data'
 
 export default {
   components: {
@@ -180,6 +181,9 @@ export default {
         this.drawer = true
       } else if (type === 'watch') {
         this.watch = true
+        getlist().then((response) => {
+          console.log('13123123', response)
+        })
       }
     },
     update(item) {
