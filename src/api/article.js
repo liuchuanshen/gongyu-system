@@ -8,6 +8,24 @@ export function fetchList(query) {
   })
 }
 
+// 获取留言箱列表
+export function fetchWarningMsg(query) {
+  return request({
+    url: '/vue-element-admin/article/Msglist',
+    method: 'get',
+    params: query
+  })
+}
+
+// 添加到待办事项成功
+export function fetchSuccessMsg(query) {
+  return request({
+    url: '/vue-element-admin/article/SuccessMsg',
+    method: 'get',
+    params: query
+  })
+}
+
 export function fetchArticle(id) {
   return request({
     url: '/vue-element-admin/article/detail',

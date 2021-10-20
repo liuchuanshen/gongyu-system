@@ -78,6 +78,7 @@
 
 <script>
 import CountTo from 'vue-count-to'
+import {fetchSuccessMsg} from '@/api/article'
 
 export default {
   components: {
@@ -88,35 +89,37 @@ export default {
       activeName: '1',
       drawer: null,
       todolist: [],
-      MessageBox: JSON.parse(localStorage.getItem('todolist')).length
+      MessageBox: null
     }
   },
   mounted() {
-    this.$bus.$on('MessageBox', () => {
-      this.MessageBox = JSON.parse(localStorage.getItem('todolist')).length
+    this.$bus.$on('MessageBox', (data) => {
+      this.MessageBox = data.list.length
+      this.todolist = data.list
     })
   },
   methods: {
     handleSetLineChartData(type) {
-      this.$emit('handleSetLineChartData', type)
+      // this.$emit('handleSetLineChartData', type)
 
       if (type === 'messages') {
-        this.msg = [
-          { id: '1', msg: '房东我的水管爆了', name: '刘XX ', time: '2021-7-1', fh: '101', status: 'wcl' },
-          { id: '2', msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1', fh: '102', status: 'wcl' },
-          { id: '3', msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1', fh: '201', status: 'wcl' },
-          { id: '4', msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1', fh: '202', status: 'wcl' },
-          { id: '5', msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1', fh: '301', status: 'wcl' },
-          { id: '6', msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1', fh: '302', status: 'wcl' }
-        ]
-        if (localStorage.getItem('todolist')) {
-          this.todolist = JSON.parse(localStorage.getItem('todolist'))
           this.drawer = true
-        } else {
-          localStorage.setItem('todolist', JSON.stringify(this.msg))
-          this.todolist = JSON.parse(localStorage.getItem('todolist'))
-          this.drawer = true
-        }
+        // this.msg = [
+        //   { id: '1', msg: '房东我的水管爆了', name: '刘XX ', time: '2021-7-1', fh: '101', status: 'wcl' },
+        //   { id: '2', msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1', fh: '102', status: 'wcl' },
+        //   { id: '3', msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1', fh: '201', status: 'wcl' },
+        //   { id: '4', msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1', fh: '202', status: 'wcl' },
+        //   { id: '5', msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1', fh: '301', status: 'wcl' },
+        //   { id: '6', msg: '房东我的水管爆了', name: '刘XX', time: '2021-7-1', fh: '302', status: 'wcl' }
+        // ]
+        // if (localStorage.getItem('todolist')) {
+        //   this.todolist = JSON.parse(localStorage.getItem('todolist'))
+        //   this.drawer = true
+        // } else {
+        //   localStorage.setItem('todolist', JSON.stringify(this.msg))
+        //   this.todolist = JSON.parse(localStorage.getItem('todolist'))
+        //   this.drawer = true
+        // }
       }
     },
     update(item) {
@@ -125,30 +128,17 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.data = []
-        const res = this.todolist.filter((res) => {
-          if (item.id !== res.id) {
-            return res
-          } else if (item.id === res.id) {
-            this.data.push(item)
-          }
+        const query = {'id':item.id}
+        fetchSuccessMsg(query).then(response => {
+            if(response.code===20000){
+              this.drawer = true
+              this.todolist = data.list
+               this.$message({
+                  type: 'success',
+                  message: '添加到待办事项成功！'
+                })
+            }
         })
-
-        localStorage.setItem('todolist', JSON.stringify(res))
-
-        if (localStorage.getItem('todolist-success')) {
-          const successData = JSON.parse(localStorage.getItem('todolist-success'))
-          successData.push(this.data[0])
-          localStorage.setItem('todolist-success', JSON.stringify(successData))
-        } else {
-          localStorage.setItem('todolist-success', JSON.stringify(this.data))
-        }
-
-        this.$message({
-          type: 'success',
-          message: '添加到待办事项成功！'
-        })
-        this.todolist = JSON.parse(localStorage.getItem('todolist'))
       }).catch(() => {
         this.$message({
           type: 'info',

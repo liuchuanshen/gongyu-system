@@ -60,32 +60,14 @@ const List = [
   { id: 8, fh: '402', rzsj: '2017-1-25', zysj: '2021-12-31', xm: '哈力克', csmm: '431204', sjhm: '137625433232'},
   { id: 9, fh: '501', rzsj: '2028-9-20', zysj: '2021-12-31', xm: '西坝口', csmm: '021294', sjhm: '13762541262'},
   { id: 10, fh: '502', rzsj: '2021-2-27', zysj: '2021-12-31', xm: '阿萨德', csmm: '439292', sjhm: '13126254362'},
-  
 ]
 
-// const count = 100
-// const baseContent = '<p>I am testing data, I am testing data.</p><p><img src="https://wpimg.wallstcn.com/4c69009c-0fd4-4153-b112-6cb53d1cf943"></p>'
-// const image_uri = 'https://wpimg.wallstcn.com/e4558086-631c-425c-9430-56ffb46e70b3'
-// for (let i = 0; i < count; i++) {
-//   List.push(Mock.mock({
-//     id: '@increment',
-//     timestamp: +Mock.Random.date('T'),
-//     author: '@first',
-//     reviewer: '@first',
-//     title: '@title(5, 10)',
-//     content_short: 'mock data',
-//     content: baseContent,
-//     forecast: '@float(0, 100, 2, 2)',
-//     importance: '@integer(1, 3)',
-//     'type|1': ['CN', 'US', 'JP', 'EU'],
-//     'status|1': ['published', 'draft'],
-//     display_time: '@datetime',
-//     comment_disabled: true,
-//     pageviews: '@integer(300, 5000)',
-//     image_uri,
-//     platforms: ['a-platform']
-//   }))
-// }
+let messageBox=[
+  { id: '1', msg: '房东我的水管爆了', name: '阿萨德', time: '2021-10-20', houseId: '101', status: 'wcl' },
+  { id: '2', msg: '房东我的水管爆了', name: '西坝口', time: '2021-10-20', houseId: '101', status: 'wcl' },
+]
+
+const todolist=[]
 
 module.exports = [
   {
@@ -116,7 +98,44 @@ module.exports = [
       }
     }
   },
+  {
+    url: '/vue-element-admin/article/Msglist',
+    type: 'get',
+    response: config => {
+      return {
+        code: 20000,
+        data: {
+          list:messageBox
+        }
+      }
+    }
+  },
+  {
+    url: '/vue-element-admin/article/SuccessMsg',
+    type: 'get',
+    response: config => {
+      const {id} = config.query
+      // console.log('id',id)
+      // console.log('messageBox',messageBox)
 
+      messageBox.forEach((item)=>{
+        if(item.id===id){
+          todolist.push(item)
+        }
+      })
+      let arr = messageBox.filter(item => {
+        return item.id != id
+      })
+      messageBox = arr
+
+      return {
+        code: 20000,
+        data:  {
+          list:messageBox
+        }
+      }
+    }
+  },
   {
     url: '/vue-element-admin/article/detail',
     type: 'get',
@@ -170,6 +189,7 @@ module.exports = [
         data: 'success'
       }
     }
-  }
+  },
+ 
 ]
 
