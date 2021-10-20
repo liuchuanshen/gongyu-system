@@ -199,7 +199,6 @@ export const asyncRoutes = [
       }
     ]
   },
-
   {
     path: "/map",
     component: Layout,
