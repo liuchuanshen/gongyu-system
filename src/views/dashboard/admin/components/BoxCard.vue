@@ -1,10 +1,10 @@
 <template>
   <el-card class="box-card-component" style="margin-left:8px;">
     <div slot="header" class="box-card-header">
-      <!-- <img
+      <img
         src="https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png"
-      /> -->
-      <img src="https://s3.bmp.ovh/imgs/2021/10/8da78e6be76cca7b.jpg">
+      >
+      <!-- <img src="https://s3.bmp.ovh/imgs/2021/10/8da78e6be76cca7b.jpg" /> -->
       <!-- <img src="https://s3.bmp.ovh/imgs/2021/10/c2a741e5a4a4e3a9.jpg" /> -->
     </div>
     <div style="position:relative;">

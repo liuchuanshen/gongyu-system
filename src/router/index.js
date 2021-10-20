@@ -10,7 +10,7 @@ import Layout from '@/layout'
 // import componentsRouter from './modules/components'
 import warningRouter from './modules/warningRouter'
 import chartsRouter from './modules/charts'
-import tableRouter from './modules/table'
+// import tableRouter from "./modules/table";
 import nestedRouter from './modules/nested'
 
 /**
@@ -108,64 +108,64 @@ export const asyncRoutes = [
   warningRouter,
   // componentsRouter,
   nestedRouter,
-  tableRouter,
+  //   {
+  //     path: "/example",
+  //     component: Layout,
+  //     redirect: "/example/list",
+  //     name: "Example",
+  //     meta: {
+  //       title: "Example",
+  //       icon: "el-icon-s-help"
+  //     },
+  //     children: [
+  //       {
+  //         path: "edit/:id(\\d+)",
+  //         component: () => import("@/views/example/edit"),
+  //         name: "EditArticle",
+  //         meta: {
+  //           title: "Edit Article",
+  //           noCache: true,
+  //           activeMenu: "/example/list"
+  //         },
+  //         hidden: true
+  //       },
+  //       {
+  //         path: "list",
+  //         component: () => import("@/views/example/list"),
+  //         name: "ArticleList",
+  //         meta: { title: "住客管理", icon: "list" }
+  //       }
+  //     ]
+  //   },
   {
-    path: '/example',
+    path: '/list',
+    name: 'list',
     component: Layout,
-    redirect: '/example/list',
-    name: 'Example',
-    meta: {
-      title: 'Example',
-      icon: 'el-icon-s-help'
-    },
+    meta: { title: '公寓管理', icon: 'el-icon-office-building' },
     children: [
-      // {
-      //   path: 'create',
-      //   component: () => import('@/views/example/create'),
-      //   name: 'CreateArticle',
-      //   meta: { title: 'Create Article', icon: 'edit' }
-      // },
       {
-        path: 'edit/:id(\\d+)',
-        component: () => import('@/views/example/edit'),
-        name: 'EditArticle',
-        meta: {
-          title: 'Edit Article',
-          noCache: true,
-          activeMenu: '/example/list'
-        },
-        hidden: true
+        path: 'article-list',
+        name: 'ArticleList',
+        component: () => import('@/views/example/list'),
+        meta: { title: '住客编辑', icon: 'el-icon-edit-outline' }
       },
       {
-        path: 'list',
-        component: () => import('@/views/example/list'),
-        name: 'ArticleList',
-        meta: { title: '住客管理', icon: 'list' }
-      }
-    ]
-  },
-
-  {
-    path: '/tab',
-    component: Layout,
-    children: [
+        path: 'complex-table',
+        name: 'ComplexTable',
+        component: () => import('@/views/table/complex-table'),
+        meta: { title: '住客录入', icon: 'el-icon-s-custom' }
+      },
       {
-        path: 'index',
-        component: () => import('@/views/tab/index'),
-        name: 'Tab',
-        meta: { title: '水电费管理', icon: 'tab' }
-      }
-    ]
-  },
-  {
-    path: '/password',
-    component: Layout,
-    children: [
-      {
-        path: 'manage',
+        path: 'password',
         component: () => import('@/views/passManage/index'),
         name: 'Password',
         meta: { title: '密码管理', icon: 'password' }
+      },
+      {
+        path: 'tab',
+        component: () => import('@/views/tab/index'),
+        name: 'Tab',
+        meta: { title: '水电费管理', icon: 'tab' }
       }
     ]
   },
@@ -207,7 +207,6 @@ export const asyncRoutes = [
   //     }
   //   ]
   // },
-
   {
     path: '/excel',
     component: Layout,
@@ -252,7 +251,7 @@ export const asyncRoutes = [
     name: 'Excel',
     meta: {
       title: '公寓情况',
-      icon: 'excel'
+      icon: 'el-icon-location'
     },
     children: [
       {
