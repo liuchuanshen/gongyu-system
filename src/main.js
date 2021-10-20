@@ -31,6 +31,10 @@ import * as filters from './filters' // global filters
 
 import VueElementUISkeleton from 'vue-elementui-skeleton'
 
+// 引入echarts
+import echarts from 'echarts'
+Vue.prototype.echarts = echarts
+
 Vue.use(Bus)
 /**
  * If you don't want to use mock-server

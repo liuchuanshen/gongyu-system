@@ -30,18 +30,17 @@
       <p>在住人口： {{ people }} 人</p>
       <span slot="footer" class="dialog-footer">
         <el-button type="success" @click="monitor">实时监控</el-button>
-        <el-button type="success" @click="monitor">设备情况</el-button>
+        <el-button type="success" @click="watch">设备情况</el-button>
         <el-button type="danger" @click="centerDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
       </span>
     </el-dialog>
 
-    <!-- 监控信息 -->
+    <!-- 视频监控信息 -->
     <el-drawer
       :title="title"
       :visible.sync="drawer"
       direction="ttb"
-      :before-close="handleClose"
     >
       <div class="video">
         <div>
@@ -57,19 +56,35 @@
           <video src="./1.mp4" controls="controls" autoplay loop height="230px" />
         </div>
       </div>
+      <div id="myChart" :style="{width: '300px', height: '300px'}"></div>
+    </el-drawer>
 
+
+    <!-- 设备监控信息 -->
+    <el-drawer
+      title="设备监控"
+      :visible.sync="watchStatus"
+      direction="ttb"
+    >
+    <div style="display:flex">
+      <div id="myChart1" :style="{width: '320px', height: '320px',marginLeft:'100px'}"></div>
+      <div id="myChart2" :style="{width: '320px', height: '320px',marginLeft:'100px'}"></div>
+      <div id="myChart3" :style="{width: '320px', height: '320px',marginLeft:'100px'}"></div>
+      <div id="myChart4" :style="{width: '320px', height: '320px',marginLeft:'100px'}"></div>
+    </div>
     </el-drawer>
 
   </div>
 </template>
 
 <script>
-
+import { color } from 'echarts/lib/export'
 export default {
   name: '',
   data() {
     return {
-      drawer: null,
+      watchStatus:false,
+      drawer: false,
       people: null,
       houseType: null,
       floor: null,
@@ -111,11 +126,12 @@ export default {
       type: null
     }
   },
+  created(){
+  },
   mounted() {
     this.showMap()
   },
   methods: {
-
     /**
         * 地图展示
         */
@@ -175,7 +191,130 @@ export default {
     },
     monitor() {
       this.drawer = true
-    }
+     
+    },
+    watch(){
+      this.watchStatus=true
+      this.$nextTick(()=>{
+          this.drawLine()
+        })
+    },
+    drawLine(){
+        // 基于准备好的dom，初始化echarts实例
+        let myChart1 = this.echarts.init(document.getElementById('myChart1'))
+        let myChart2 = this.echarts.init(document.getElementById('myChart2'))
+        let myChart3 = this.echarts.init(document.getElementById('myChart3'))
+        let myChart4 = this.echarts.init(document.getElementById('myChart4'))
+        // 绘制图表
+        myChart1.setOption({
+            tooltip: {
+                formatter: '{a} <br/>{b} : {c}%'
+              },
+              series: [
+                {
+                  name: '压力',
+                  type: 'gauge',
+                  progress: {
+                    show: true
+                  },
+                  detail: {
+                    valueAnimation: true,
+                    formatter: '{value}'
+                  },
+                  data: [
+                    {
+                      value: 80,
+                      name: '水压',
+                    }
+                  ],
+                  title:{
+                    color:'#fff'
+                  }
+                }
+              ]
+        });
+        myChart2.setOption({
+            tooltip: {
+                formatter: '{a} <br/>{b} : {c}%'
+              },
+              series: [
+                {
+                  name: '压力',
+                  type: 'gauge',
+                  progress: {
+                    show: true
+                  },
+                  detail: {
+                    valueAnimation: true,
+                    formatter: '{value}'
+                  },
+                  data: [
+                    {
+                      value: 55,
+                      name: '电压'
+                    }
+                  ],
+                  title:{
+                    color:'#fff'
+                  }
+                }
+              ]
+        });
+        myChart3.setOption({
+            tooltip: {
+                formatter: '{a} <br/>{b} : {c}%'
+              },
+              series: [
+                {
+                  name: '压力',
+                  type: 'gauge',
+                  progress: {
+                    show: true
+                  },
+                  detail: {
+                    valueAnimation: true,
+                    formatter: '{value}'
+                  },
+                  data: [
+                    {
+                      value: 15,
+                      name: '气压'
+                    }
+                  ],
+                  title:{
+                    color:'#fff'
+                  }
+                }
+              ]
+        });
+        myChart4.setOption({
+            tooltip: {
+                formatter: '{a} <br/>{b} : {c}%'
+              },
+              series: [
+                {
+                  name: '压力',
+                  type: 'gauge',
+                  progress: {
+                    show: true
+                  },
+                  detail: {
+                    valueAnimation: true,
+                    formatter: '{value}'
+                  },
+                  data: [
+                    {
+                      value: 20,
+                      name: '烟雾浓度'
+                    }
+                  ],
+                  title:{
+                    color:'#fff'
+                  }
+                }
+              ]
+        });
+    },
   }
 }
 </script>
