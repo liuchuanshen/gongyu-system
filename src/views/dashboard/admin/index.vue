@@ -29,7 +29,7 @@ export default {
   name: 'DashboardAdmin',
   components: {
     // GithubCorner,
-    PanelGroup,
+    PanelGroup
     // LineChart,
     // RaddarChart,
     // PieChart,
@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     // handleSetLineChartData(type) {
-      // this.lineChartData = lineChartData[type]
+    // this.lineChartData = lineChartData[type]
     // }
   }
 }

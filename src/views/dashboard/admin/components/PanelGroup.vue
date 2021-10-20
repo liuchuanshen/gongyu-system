@@ -53,7 +53,7 @@
           </div>
         </div>
       </el-col>
-       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
         <div class="card-panel" @click="handleSetLineChartData('watch')">
           <div class="card-panel-description-other">
             <div class="card-panel-text">
@@ -82,38 +82,40 @@
       </el-collapse>
     </el-drawer>
     <el-dialog title="租客看房" :visible.sync="watch">
-        <el-form :model="form">
-          <el-form-item label="门禁密码" :label-width="formLabelWidth">
-            <el-input v-model="form.doorpassword" autocomplete="off" style="width:200px"></el-input>
-          </el-form-item>
-           <el-form-item label="门禁密码有效时间" :label-width="formLabelWidth">
-           <div class="block">
-              <el-slider
-                v-model="time"  show-input>
-              </el-slider>
-            </div>
-          </el-form-item>
-          <el-form-item label="房号" :label-width="formLabelWidth">
-            <el-select v-model="form.houseId" placeholder="请选择活动区域">
-               <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="房间密码" :label-width="formLabelWidth">
-              <el-input v-model="form.password" autocomplete="off" style="width:200px"></el-input>
-          </el-form-item>
-          <el-form-item label="密码有效时间" :label-width="formLabelWidth">
-           <div class="block">
-              <el-slider
-                v-model="time"  show-input>
-              </el-slider>
-            </div>
-          </el-form-item>
-        </el-form>
+      <el-form :model="form">
+        <el-form-item label="门禁密码" :label-width="formLabelWidth">
+          <el-input v-model="form.doorpassword" autocomplete="off" style="width:200px" />
+        </el-form-item>
+        <el-form-item label="门禁密码有效时间" :label-width="formLabelWidth">
+          <div class="block">
+            <el-slider
+              v-model="time"
+              show-input
+            />
+          </div>
+        </el-form-item>
+        <el-form-item label="房号" :label-width="formLabelWidth">
+          <el-select v-model="form.houseId" placeholder="请选择活动区域">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="房间密码" :label-width="formLabelWidth">
+          <el-input v-model="form.password" autocomplete="off" style="width:200px" />
+        </el-form-item>
+        <el-form-item label="密码有效时间" :label-width="formLabelWidth">
+          <div class="block">
+            <el-slider
+              v-model="time"
+              show-input
+            />
+          </div>
+        </el-form-item>
+      </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="watch = false">取 消</el-button>
         <el-button type="primary" @click="watch = false">确 定</el-button>
@@ -126,7 +128,7 @@
 
 <script>
 import CountTo from 'vue-count-to'
-import {fetchSuccessMsg} from '@/api/article'
+import { fetchSuccessMsg } from '@/api/article'
 
 export default {
   components: {
@@ -134,32 +136,32 @@ export default {
   },
   data() {
     return {
-      time:'',
+      time: '',
       formLabelWidth: '150px',
       form: {
-          houseId: '',
-          password:'',
-          doorpassword:''
-        },
+        houseId: '',
+        password: '',
+        doorpassword: ''
+      },
       options: [{
-          value: '1',
-          label: '101'
-        }, {
-          value: '2',
-          label: '102'
-        }, {
-          value: '3',
-          label: '103'
-        }, {
-          value: '4',
-          label: '104'
-        }, {
-          value: '5',
-          label: '105'
+        value: '1',
+        label: '101'
+      }, {
+        value: '2',
+        label: '102'
+      }, {
+        value: '3',
+        label: '103'
+      }, {
+        value: '4',
+        label: '104'
+      }, {
+        value: '5',
+        label: '105'
       }],
       activeName: '1',
       drawer: null,
-      watch:null,
+      watch: null,
       todolist: [],
       MessageBox: null
     }
@@ -175,9 +177,9 @@ export default {
       // this.$emit('handleSetLineChartData', type)
 
       if (type === 'messages') {
-          this.drawer = true
-      }else if(type==='watch'){
-        this.watch=true
+        this.drawer = true
+      } else if (type === 'watch') {
+        this.watch = true
       }
     },
     update(item) {
@@ -186,16 +188,16 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        const query = {'id':item.id}
+        const query = { 'id': item.id }
         fetchSuccessMsg(query).then(response => {
-            if(response.code===20000){
-              this.drawer = true
-              this.todolist = data.list
-               this.$message({
-                  type: 'success',
-                  message: '添加到待办事项成功！'
-                })
-            }
+          if (response.code === 20000) {
+            this.drawer = true
+            this.todolist = data.list
+            this.$message({
+              type: 'success',
+              message: '添加到待办事项成功！'
+            })
+          }
         })
       }).catch(() => {
         this.$message({
