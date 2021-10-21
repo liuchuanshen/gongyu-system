@@ -2,7 +2,7 @@ import http from '@/utils/http'
 
 export function getlist(data) {
   return http({
-    url: '/house/houselist',
+    url: '/houselist/houselist',
     method: 'get',
     data
   })
