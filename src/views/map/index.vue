@@ -56,9 +56,8 @@
           <video src="./1.mp4" controls="controls" autoplay loop height="230px" />
         </div>
       </div>
-      <div id="myChart" :style="{width: '300px', height: '300px'}"></div>
+      <div id="myChart" :style="{width: '300px', height: '300px'}" />
     </el-drawer>
-
 
     <!-- 设备监控信息 -->
     <el-drawer
@@ -66,12 +65,12 @@
       :visible.sync="watchStatus"
       direction="ttb"
     >
-    <div style="display:flex">
-      <div id="myChart1" :style="{width: '320px', height: '320px',marginLeft:'100px'}"></div>
-      <div id="myChart2" :style="{width: '320px', height: '320px',marginLeft:'100px'}"></div>
-      <div id="myChart3" :style="{width: '320px', height: '320px',marginLeft:'100px'}"></div>
-      <div id="myChart4" :style="{width: '320px', height: '320px',marginLeft:'100px'}"></div>
-    </div>
+      <div style="display:flex">
+        <div id="myChart1" :style="{width: '320px', height: '320px',marginLeft:'100px'}" />
+        <div id="myChart2" :style="{width: '320px', height: '320px',marginLeft:'100px'}" />
+        <div id="myChart3" :style="{width: '320px', height: '320px',marginLeft:'100px'}" />
+        <div id="myChart4" :style="{width: '320px', height: '320px',marginLeft:'100px'}" />
+      </div>
     </el-drawer>
 
   </div>
@@ -83,7 +82,7 @@ export default {
   name: '',
   data() {
     return {
-      watchStatus:false,
+      watchStatus: false,
       drawer: false,
       people: null,
       houseType: null,
@@ -98,15 +97,15 @@ export default {
       mapData: [
         { kkjd: 113.241246, kkwd: 23.431839, kkmc: '融创', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
         { kkjd: 113.232191, kkwd: 23.434293, kkmc: '雪域华府', houseType: '2室2厅1卫  75 平  精装修', floor: ' 南  中层 / 30层', people: '210' },
-        { kkjd: 113.233844, kkwd: 23.411479, kkmc: '骏壹万邦',houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
+        { kkjd: 113.233844, kkwd: 23.411479, kkmc: '骏壹万邦', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
         { kkjd: 113.225256, kkwd: 23.395128, kkmc: '花果山', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
-        { kkjd: 113.243043, kkwd: 23.396654, kkmc: '锦尚蓬莱', },
+        { kkjd: 113.243043, kkwd: 23.396654, kkmc: '锦尚蓬莱' },
         { kkjd: 113.215626, kkwd: 23.403287, kkmc: '茶园雅居', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
         { kkjd: 113.208512, kkwd: 23.401728, kkmc: '松园居', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
         { kkjd: 113.221375, kkwd: 23.412175, kkmc: '公益别墅', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
         { kkjd: 113.203697, kkwd: 23.394664, kkmc: '元华新村', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
         { kkjd: 113.232838, kkwd: 23.4072, kkmc: '亚美大厦', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
-        { kkjd: 113.208512, kkwd: 23.4072, kkmc: '新景豪苑',  houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
+        { kkjd: 113.208512, kkwd: 23.4072, kkmc: '新景豪苑', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
         { kkjd: 113.228322, kkwd: 23.5072, kkmc: '公寓11', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
         { kkjd: 113.228212, kkwd: 23.4072, kkmc: '钻石花园', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
         { kkjd: 113.248312, kkwd: 23.4072, kkmc: '天幕城', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
@@ -126,7 +125,7 @@ export default {
       type: null
     }
   },
-  created(){
+  created() {
   },
   mounted() {
     this.showMap()
@@ -190,130 +189,129 @@ export default {
     },
     monitor() {
       this.drawer = true
-     
     },
-    watch(){
-      this.watchStatus=true
-      this.$nextTick(()=>{
-          this.drawLine()
-        })
+    watch() {
+      this.watchStatus = true
+      this.$nextTick(() => {
+        this.drawLine()
+      })
     },
-    drawLine(){
-        // 基于准备好的dom，初始化echarts实例
-        let myChart1 = this.echarts.init(document.getElementById('myChart1'))
-        let myChart2 = this.echarts.init(document.getElementById('myChart2'))
-        let myChart3 = this.echarts.init(document.getElementById('myChart3'))
-        let myChart4 = this.echarts.init(document.getElementById('myChart4'))
-        // 绘制图表
-        myChart1.setOption({
-            tooltip: {
-                formatter: '{a} <br/>{b} : {c}%'
-              },
-              series: [
-                {
-                  name: '压力',
-                  type: 'gauge',
-                  progress: {
-                    show: true
-                  },
-                  detail: {
-                    valueAnimation: true,
-                    formatter: '{value}'
-                  },
-                  data: [
-                    {
-                      value: 80,
-                      name: '水压',
-                    }
-                  ],
-                  title:{
-                    color:'#fff'
-                  }
-                }
-              ]
-        });
-        myChart2.setOption({
-            tooltip: {
-                formatter: '{a} <br/>{b} : {c}%'
-              },
-              series: [
-                {
-                  name: '压力',
-                  type: 'gauge',
-                  progress: {
-                    show: true
-                  },
-                  detail: {
-                    valueAnimation: true,
-                    formatter: '{value}'
-                  },
-                  data: [
-                    {
-                      value: 55,
-                      name: '电压'
-                    }
-                  ],
-                  title:{
-                    color:'#fff'
-                  }
-                }
-              ]
-        });
-        myChart3.setOption({
-            tooltip: {
-                formatter: '{a} <br/>{b} : {c}%'
-              },
-              series: [
-                {
-                  name: '压力',
-                  type: 'gauge',
-                  progress: {
-                    show: true
-                  },
-                  detail: {
-                    valueAnimation: true,
-                    formatter: '{value}'
-                  },
-                  data: [
-                    {
-                      value: 15,
-                      name: '气压'
-                    }
-                  ],
-                  title:{
-                    color:'#fff'
-                  }
-                }
-              ]
-        });
-        myChart4.setOption({
-            tooltip: {
-                formatter: '{a} <br/>{b} : {c}%'
-              },
-              series: [
-                {
-                  name: '压力',
-                  type: 'gauge',
-                  progress: {
-                    show: true
-                  },
-                  detail: {
-                    valueAnimation: true,
-                    formatter: '{value}'
-                  },
-                  data: [
-                    {
-                      value: 20,
-                      name: '烟雾浓度'
-                    }
-                  ],
-                  title:{
-                    color:'#fff'
-                  }
-                }
-              ]
-        });
-    },
+    drawLine() {
+      // 基于准备好的dom，初始化echarts实例
+      const myChart1 = this.echarts.init(document.getElementById('myChart1'))
+      const myChart2 = this.echarts.init(document.getElementById('myChart2'))
+      const myChart3 = this.echarts.init(document.getElementById('myChart3'))
+      const myChart4 = this.echarts.init(document.getElementById('myChart4'))
+      // 绘制图表
+      myChart1.setOption({
+        tooltip: {
+          formatter: '{a} <br/>{b} : {c}%'
+        },
+        series: [
+          {
+            name: '压力',
+            type: 'gauge',
+            progress: {
+              show: true
+            },
+            detail: {
+              valueAnimation: true,
+              formatter: '{value}'
+            },
+            data: [
+              {
+                value: 80,
+                name: '水压'
+              }
+            ],
+            title: {
+              color: '#fff'
+            }
+          }
+        ]
+      })
+      myChart2.setOption({
+        tooltip: {
+          formatter: '{a} <br/>{b} : {c}%'
+        },
+        series: [
+          {
+            name: '压力',
+            type: 'gauge',
+            progress: {
+              show: true
+            },
+            detail: {
+              valueAnimation: true,
+              formatter: '{value}'
+            },
+            data: [
+              {
+                value: 55,
+                name: '电压'
+              }
+            ],
+            title: {
+              color: '#fff'
+            }
+          }
+        ]
+      })
+      myChart3.setOption({
+        tooltip: {
+          formatter: '{a} <br/>{b} : {c}%'
+        },
+        series: [
+          {
+            name: '压力',
+            type: 'gauge',
+            progress: {
+              show: true
+            },
+            detail: {
+              valueAnimation: true,
+              formatter: '{value}'
+            },
+            data: [
+              {
+                value: 15,
+                name: '气压'
+              }
+            ],
+            title: {
+              color: '#fff'
+            }
+          }
+        ]
+      })
+      myChart4.setOption({
+        tooltip: {
+          formatter: '{a} <br/>{b} : {c}%'
+        },
+        series: [
+          {
+            name: '压力',
+            type: 'gauge',
+            progress: {
+              show: true
+            },
+            detail: {
+              valueAnimation: true,
+              formatter: '{value}'
+            },
+            data: [
+              {
+                value: 20,
+                name: '烟雾浓度'
+              }
+            ],
+            title: {
+              color: '#fff'
+            }
+          }
+        ]
+      })
+    }
   }
 }
 </script>
