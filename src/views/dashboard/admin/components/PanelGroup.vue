@@ -10,7 +10,7 @@
             <div class="card-panel-text">
               当前租户
             </div>
-            <count-to :start-val="0" :end-val="123" :duration="2600" class="card-panel-num" />
+            <count-to :start-val="0" :end-val="userNumber" :duration="2600" class="card-panel-num" />
           </div>
         </div>
       </el-col>
@@ -129,7 +129,7 @@
 <script>
 import CountTo from 'vue-count-to'
 import { fetchSuccessMsg } from '@/api/article'
-import { getlist } from '@/api/data'
+import { getlist,getuser } from '@/api/data'
 
 export default {
   components: {
@@ -164,8 +164,12 @@ export default {
       drawer: null,
       watch: null,
       todolist: [],
-      MessageBox: null
+      MessageBox: null,
+      userNumber:null
     }
+  },
+  created(){
+    this.UserList()
   },
   mounted() {
     this.$bus.$on('MessageBox', (data) => {
@@ -174,9 +178,12 @@ export default {
     })
   },
   methods: {
+    UserList(){
+      getuser().then((response) => {
+        this.userNumber = response.data.data.total
+      })
+    },
     handleSetLineChartData(type) {
-      // this.$emit('handleSetLineChartData', type)
-
       if (type === 'messages') {
         this.drawer = true
       } else if (type === 'watch') {

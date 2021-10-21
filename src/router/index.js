@@ -118,15 +118,15 @@ export const asyncRoutes = [
     meta: { title: "公寓管理", icon: "el-icon-office-building" },
     children: [
       {
-        path: "article-list",
+        path: "edit",
         name: "ArticleList",
         component: () => import("@/views/example/list"),
         meta: { title: "住客编辑", icon: "el-icon-edit-outline" }
       },
       {
-        path: "complex-table",
-        name: "ComplexTable",
-        component: () => import("@/views/table/complex-table"),
+        path: "create",
+        name: "create",
+        component: () => import("@/views/table/create"),
         meta: { title: "住客录入", icon: "el-icon-s-custom" }
       },
       {

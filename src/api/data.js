@@ -8,3 +8,16 @@ export function getlist(data) {
   })
 }
 
+export function getuser(data) {
+  return http.get('/houselist/list',data)
+}
+
+export function createUser(data) {
+  return http.get('/houselist/create',data)
+}
+
+export function update(data) {
+  return http.get('/houselist/update',data)
+}
+
+
