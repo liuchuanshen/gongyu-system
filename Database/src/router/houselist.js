@@ -68,5 +68,29 @@ const colNameUser = 'user';
     })
 
 
+    // api/houselist/temporary
+     //新建临时看房的密码数据写进mongoDB
+    router.get('/temporary',async (req,res)=>{
+        let {doorPsw,doorPswTime,houseId,housePsw,housePswTime} = req.query;
+        try{
+            await mongo.create(colNamePsw,{doorPsw,doorPswTime,houseId,housePsw,housePswTime});
+            res.send(formatData())
+        }catch(err){
+            res.send(formatData({code:400}))
+        }
+    })
+
+    // api/houselist/temporaryList
+     // 所有临时密码列表分页信息
+     router.get('/temporaryList',async (req,res)=>{
+        let {page=1,size=50,sort='regtime',total} = req.query;
+        let skip = (page-1)*size;
+        let limit = size*1;
+        total = (total=='0'||total=='false') ? false : true;
+        const result = await mongo.find(colNamePsw,{},{skip,limit,sort,total})
+        res.send(formatData({data:total?result:result.result}))
+    })
+
+
 
 module.exports = router;

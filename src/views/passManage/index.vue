@@ -18,11 +18,11 @@
       highlight-current-row
       style="width: 100%; overflow-y:hidden;"
     >
-      <el-table-column align="center" label="序号" width="80">
+      <!-- <el-table-column align="center" label="序号" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <el-table-column
         align="center"
@@ -32,46 +32,45 @@
       >
         <template slot-scope="{ row }">
           <el-tag :type="row.status | statusFilter">
-            {{ row.fh }}
+            {{ row.houseId }}
           </el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="姓名">
+      <el-table-column align="center" label="门禁密码">
         <template slot-scope="scope">
-          <span>{{ scope.row.xm }}</span>
+          <span>{{ scope.row.doorPsw }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="入住时间">
+      <el-table-column align="center" label="门禁密码有效时间">
         <template slot-scope="scope">
-          <span>{{ scope.row.rzsj }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" label="租约时间">
-        <template slot-scope="scope">
-          <span>{{ scope.row.zysj }}</span>
+          <span>{{ scope.row.doorPswTime }}分钟</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="房间密码">
         <template slot-scope="scope">
-          <!-- <svg-icon v-for="n in +scope.row.importance" :key="n" icon-class="star" class="meta-item__icon" /> -->
-          <span>{{ scope.row.csmm }}</span>
+          <span>{{ scope.row.housePsw }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" class-name="status-col" label="手机号码">
+      <el-table-column align="center" label="房间密码有效时间">
         <template slot-scope="scope">
-          <!-- <el-tag :type="row.status | statusFilter"> -->
-          <span>{{ scope.row.sjhm }}</span>
-          <!-- </el-tag> -->
+          <span>{{ scope.row.housePswTime }}分钟</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="操作" width="200">
         <template slot-scope="scope">
+          <el-button
+            type="danger"
+            size="mini"
+            icon="el-icon-refresh"
+            @click="resetPass(scope.row)"
+          >
+            禁用
+          </el-button>
           <el-button
             type="warning"
             size="mini"
@@ -91,6 +90,8 @@
           </el-button>
         </template>
       </el-table-column>
+
+
     </el-table>
     <pagination
       v-show="total > 0"
@@ -103,7 +104,7 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/article'
+import {  temporaryList } from '@/api/data'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
@@ -181,9 +182,9 @@ export default {
     },
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
+      temporaryList().then(res => {
+        this.list = res.data.data.result
+        this.total = res.data.data.total
         this.listLoading = false
       })
     },

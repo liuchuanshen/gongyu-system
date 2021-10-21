@@ -130,6 +130,12 @@ export const asyncRoutes = [
         meta: { title: '住客录入', icon: 'el-icon-s-custom' }
       },
       {
+        path: 'houseManage',
+        name: 'create',
+        component: () => import('@/views/table/houseManage'),
+        meta: { title: '房源管理', icon: 'el-icon-s-custom' }
+      },
+      {
         path: 'password',
         component: () => import('@/views/passManage/index'),
         name: 'Password',

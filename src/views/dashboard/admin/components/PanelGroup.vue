@@ -81,15 +81,17 @@
         </el-collapse-item>
       </el-collapse>
     </el-drawer>
+
+    
     <el-dialog title="租客看房" :visible.sync="watch">
       <el-form :model="form">
         <el-form-item label="门禁密码" :label-width="formLabelWidth">
-          <el-input v-model="form.doorpassword" autocomplete="off" style="width:200px" />
+          <el-input v-model="form.doorPsw" autocomplete="off" style="width:200px" />
         </el-form-item>
         <el-form-item label="门禁密码有效时间" :label-width="formLabelWidth">
           <div class="block">
             <el-slider
-              v-model="time"
+              v-model="form.doorPswTime"
               show-input
             />
           </div>
@@ -105,12 +107,12 @@
           </el-select>
         </el-form-item>
         <el-form-item label="房间密码" :label-width="formLabelWidth">
-          <el-input v-model="form.password" autocomplete="off" style="width:200px" />
+          <el-input v-model="form.housePsw" autocomplete="off" style="width:200px" />
         </el-form-item>
         <el-form-item label="密码有效时间" :label-width="formLabelWidth">
           <div class="block">
             <el-slider
-              v-model="time"
+              v-model="form.housePswTime"
               show-input
             />
           </div>
@@ -118,7 +120,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="watch = false">取 消</el-button>
-        <el-button type="primary" @click="watch = false">确 定</el-button>
+        <el-button type="primary" @click="sumbit()">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -129,7 +131,7 @@
 <script>
 import CountTo from 'vue-count-to'
 import { fetchSuccessMsg } from '@/api/article'
-import { getlist, getuser } from '@/api/data'
+import { getlist, getuser,temporary } from '@/api/data'
 
 export default {
   components: {
@@ -140,24 +142,26 @@ export default {
       time: '',
       formLabelWidth: '150px',
       form: {
+        doorPsw: '',
+        doorPswTime:null,
         houseId: '',
-        password: '',
-        doorpassword: ''
+        housePsw: '',
+        housePswTime:null
       },
       options: [{
-        value: '1',
+        value: '101',
         label: '101'
       }, {
-        value: '2',
+        value: '102',
         label: '102'
       }, {
-        value: '3',
+        value: '103',
         label: '103'
       }, {
-        value: '4',
+        value: '104',
         label: '104'
       }, {
-        value: '5',
+        value: '105',
         label: '105'
       }],
       activeName: '1',
@@ -188,9 +192,6 @@ export default {
         this.drawer = true
       } else if (type === 'watch') {
         this.watch = true
-        getlist().then((response) => {
-          console.log('13123123', response)
-        })
       }
     },
     update(item) {
@@ -215,6 +216,16 @@ export default {
           type: 'info',
           message: '已取消添加'
         })
+      })
+    },
+    sumbit(){
+      console.log('form',this.form)
+      temporary(this.form).then((res)=>{
+        console.log('res',res)
+        if(res.data.code===200){
+          this.watch = false
+          this.$message.success('设置临时门禁密码成功')
+        }
       })
     }
   }
