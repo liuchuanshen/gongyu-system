@@ -129,7 +129,7 @@
 <script>
 import CountTo from 'vue-count-to'
 import { fetchSuccessMsg } from '@/api/article'
-import { getlist,getuser } from '@/api/data'
+import { getlist, getuser } from '@/api/data'
 
 export default {
   components: {
@@ -165,10 +165,10 @@ export default {
       watch: null,
       todolist: [],
       MessageBox: null,
-      userNumber:null
+      userNumber: null
     }
   },
-  created(){
+  created() {
     this.UserList()
   },
   mounted() {
@@ -178,7 +178,7 @@ export default {
     })
   },
   methods: {
-    UserList(){
+    UserList() {
       getuser().then((response) => {
         this.userNumber = response.data.data.total
       })

@@ -19,7 +19,6 @@
       </el-button>
     </div>
 
-
     <el-table
       v-skeleton="{ loading: this.listLoading, rows: 10 }"
       v-loading="listLoading"
@@ -245,7 +244,7 @@
 
 <script>
 import {
-  getuser,update
+  getuser, update
 } from '@/api/data'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
@@ -309,7 +308,7 @@ export default {
       this.listLoading = true
       getuser().then(response => {
         this.list = response.data.data.result
-         this.total = response.data.data.total
+        this.total = response.data.data.total
         this.listLoading = false
       })
     },
@@ -325,19 +324,17 @@ export default {
       this.dialogVisible = true
     },
     handleFilter() {
-        this.getList(this.listQuery.name)
+      this.getList(this.listQuery.name)
     },
-    sumbit(rows){
+    sumbit(rows) {
       update(rows).then(res => {
-        console.log('res',res)
-        if(res.data.code===200){
+        console.log('res', res)
+        if (res.data.code === 200) {
           this.$message.success('修改信息成功')
           this.dialogVisible = false
           this.getList()
         }
-        
       })
-
     }
   }
 }

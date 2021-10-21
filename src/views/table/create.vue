@@ -90,7 +90,7 @@
           <span>{{ row.sjhm }}</span>
         </template>
       </el-table-column>
-        <el-table-column label="户型" align="center">
+      <el-table-column label="户型" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.hx }}</span>
         </template>
@@ -182,7 +182,7 @@
           <el-radio v-model="temp.hx" label="一房一厅">一房一厅</el-radio>
           <el-radio v-model="temp.hx" label="两房一厅">两房一厅</el-radio>
         </el-form-item>
-         <el-form-item label="房号" prop="fh" style="marginRight:20px">
+        <el-form-item label="房号" prop="fh" style="marginRight:20px">
           <el-radio v-model="temp.fh" label="一房一厅">一房一厅</el-radio>
           <el-radio v-model="temp.fh" label="两房一厅">两房一厅</el-radio>
         </el-form-item>
@@ -227,7 +227,7 @@
 
 <script>
 import {
-  getuser,createUser
+  getuser, createUser
 } from '@/api/data'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
@@ -246,7 +246,7 @@ const calendarTypeOptions = [
 // }, {})
 
 export default {
-  name: 'create',
+  name: 'Create',
   components: { Pagination },
   directives: { waves },
   // filters: {
@@ -282,13 +282,13 @@ export default {
       showReviewer: false,
       temp: {
         id: '',
-        fh:'',
+        fh: '',
         rzsj: '',
         zysj: '',
         xm: '',
         sfzhm: '',
         sjhm: '',
-        hx:'',
+        hx: '',
         jfqk: ''
       },
       dialogFormVisible: false,
@@ -326,13 +326,13 @@ export default {
   methods: {
     getList(name) {
       this.listLoading = true
-  
-      if(name === '' || name === undefined ){
-            name={}
-        }else{
-            name = {'name':name}
-        }
-  console.log('name',name)
+
+      if (name === '' || name === undefined) {
+        name = {}
+      } else {
+        name = { 'name': name }
+      }
+      console.log('name', name)
       getuser(name).then(response => {
         this.list = response.data.data.result
         this.temp.id = this.list.length + 1
@@ -341,7 +341,7 @@ export default {
       })
     },
     handleFilter() {
-        this.getList(this.listQuery.name)
+      this.getList(this.listQuery.name)
     },
     handleModifyStatus(row, status) {
       this.$message({
@@ -367,13 +367,13 @@ export default {
     resetTemp() {
       this.temp = {
         id: this.temp.id,
-        fh:'',
+        fh: '',
         rzsj: '',
         zysj: '',
         xm: '',
         sfzhm: '',
         sjhm: '',
-        hx:'',
+        hx: '',
         jfqk: ''
       }
     },
@@ -388,22 +388,20 @@ export default {
     createData() {
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
-          this.temp.id = this.total+1
-        createUser(this.temp).then((res) => {
-            if(res.data.code===200){
+          this.temp.id = this.total + 1
+          createUser(this.temp).then((res) => {
+            if (res.data.code === 200) {
               this.getList()
               // this.list.unshift(this.temp)
-                      this.dialogFormVisible = false
-                      this.$notify({
-                        title: '成功',
-                        message: '新增租户成功',
-                        type: 'success',
-                        duration: 5000
-                      })
+              this.dialogFormVisible = false
+              this.$notify({
+                title: '成功',
+                message: '新增租户成功',
+                type: 'success',
+                duration: 5000
+              })
             }
-            
           })
-
 
           // createArticle(this.temp).then(() => {
           //   this.list.unshift(this.temp)
