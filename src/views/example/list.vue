@@ -1,5 +1,24 @@
 <template>
   <div class="app-container">
+
+    <div class="filter-container">
+      <el-input
+        v-model="listQuery.name"
+        placeholder="请输入租客姓名"
+        style="width: 200px;margin-right: 20px;"
+        class="filter-item"
+        @keyup.enter.native="handleFilter"
+      />
+      <el-button
+        class="filter-item"
+        type="primary"
+        icon="el-icon-search"
+        @click="handleFilter"
+      >
+        搜索
+      </el-button>
+    </div>
+
     <el-table
       v-skeleton="{ loading: this.listLoading, rows: 10 }"
       v-loading="listLoading"
@@ -216,7 +235,7 @@
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button
           type="primary"
-          @click="dialogVisible = false"
+          @click="sumbit(rows)"
         >确 定</el-button>
       </span>
     </el-dialog>
@@ -224,7 +243,9 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/article'
+import {
+  getuser, update
+} from '@/api/data'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
@@ -285,9 +306,9 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
+      getuser().then(response => {
+        this.list = response.data.data.result
+        this.total = response.data.data.total
         this.listLoading = false
       })
     },
@@ -301,6 +322,19 @@ export default {
     write(rows) {
       this.rows = rows
       this.dialogVisible = true
+    },
+    handleFilter() {
+      this.getList(this.listQuery.name)
+    },
+    sumbit(rows) {
+      update(rows).then(res => {
+        console.log('res', res)
+        if (res.data.code === 200) {
+          this.$message.success('修改信息成功')
+          this.dialogVisible = false
+          this.getList()
+        }
+      })
     }
   }
 }
