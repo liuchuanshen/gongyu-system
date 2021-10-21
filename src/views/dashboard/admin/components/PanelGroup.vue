@@ -82,7 +82,6 @@
       </el-collapse>
     </el-drawer>
 
-    
     <el-dialog title="租客看房" :visible.sync="watch">
       <el-form :model="form">
         <el-form-item label="门禁密码" :label-width="formLabelWidth">
@@ -131,7 +130,7 @@
 <script>
 import CountTo from 'vue-count-to'
 import { fetchSuccessMsg } from '@/api/article'
-import { getlist, getuser,temporary } from '@/api/data'
+import { getlist, getuser, temporary } from '@/api/data'
 
 export default {
   components: {
@@ -143,10 +142,10 @@ export default {
       formLabelWidth: '150px',
       form: {
         doorPsw: '',
-        doorPswTime:null,
+        doorPswTime: null,
         houseId: '',
         housePsw: '',
-        housePswTime:null
+        housePswTime: null
       },
       options: [{
         value: '101',
@@ -218,11 +217,11 @@ export default {
         })
       })
     },
-    sumbit(){
-      console.log('form',this.form)
-      temporary(this.form).then((res)=>{
-        console.log('res',res)
-        if(res.data.code===200){
+    sumbit() {
+      console.log('form', this.form)
+      temporary(this.form).then((res) => {
+        console.log('res', res)
+        if (res.data.code === 200) {
           this.watch = false
           this.$message.success('设置临时门禁密码成功')
         }
