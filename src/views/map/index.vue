@@ -18,7 +18,7 @@
       height:100%;"
       >
         <img
-          :src="src"
+          src="https://www.bieshugc.com/storage/topic/20210818/e7e85ee1832870a6a20126c41baf41e2_water.jpg.webp?v=1629267074131"
           alt=""
           style=" width:100%;
         height:100%;"
@@ -96,21 +96,21 @@ export default {
       map: null,
       infoBox: null,
       mapData: [
-        { kkjd: 113.241246, kkwd: 23.431839, kkmc: '融创', photo: 'https://pic1.58cdn.com.cn/anjuke_58/26b4edbe0d8de9d65ee0fb7a1278a129?w=696&h=522&crop=1&t=1&srotate=1&w=640&h=480&crop=1', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
-        { kkjd: 113.232191, kkwd: 23.434293, kkmc: '雪域华府', photo: 'https://pic1.58cdn.com.cn/anjuke_58/a7224c7923f7705a3158bf51dd07f77e?w=696&h=522&crop=1&t=1&srotate=1', houseType: '2室2厅1卫  75 平  精装修', floor: ' 南  中层 / 30层', people: '210' },
-        { kkjd: 113.233844, kkwd: 23.411479, kkmc: '骏壹万邦', photo: 'https://pic1.58cdn.com.cn/anjuke_58/c66e0bc1ff4191a3970091b4a90b7b3f?w=696&h=522&crop=1&t=1&srotate=1', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
-        { kkjd: 113.225256, kkwd: 23.395128, kkmc: '花果山', photo: 'https://pic1.58cdn.com.cn/anjuke_58/26b4edbe0d8de9d65ee0fb7a1278a129?w=696&h=522&crop=1&t=1&srotate=1&w=640&h=480&crop=1', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
-        { kkjd: 113.243043, kkwd: 23.396654, kkmc: '锦尚蓬莱', photo: 'https://pic1.58cdn.com.cn/anjuke_58/7908aeaae1f9b96a9cb66e554d4ef85e?w=696&h=522&crop=1&t=1&srotate=1' },
-        { kkjd: 113.215626, kkwd: 23.403287, kkmc: '茶园雅居', photo: 'https://pic1.58cdn.com.cn/anjuke_58/26b4edbe0d8de9d65ee0fb7a1278a129?w=696&h=522&crop=1&t=1&srotate=1&w=640&h=480&crop=1', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
-        { kkjd: 113.208512, kkwd: 23.401728, kkmc: '松园居', photo: 'https://pic1.58cdn.com.cn/anjuke_58/f95488dd366b641b6f23c98bfd3baad7?w=696&h=522&crop=1&t=1&srotate=1', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
-        { kkjd: 113.221375, kkwd: 23.412175, kkmc: '公益别墅', photo: 'https://pic1.58cdn.com.cn/anjuke_58/26b4edbe0d8de9d65ee0fb7a1278a129?w=696&h=522&crop=1&t=1&srotate=1&w=640&h=480&crop=1', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
-        { kkjd: 113.203697, kkwd: 23.394664, kkmc: '元华新村', photo: 'https://pic1.58cdn.com.cn/anjuke_58/26b4edbe0d8de9d65ee0fb7a1278a129?w=696&h=522&crop=1&t=1&srotate=1&w=640&h=480&crop=1', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
-        { kkjd: 113.232838, kkwd: 23.4072, kkmc: '亚美大厦', photo: 'https://pic1.58cdn.com.cn/anjuke_58/26b4edbe0d8de9d65ee0fb7a1278a129?w=696&h=522&crop=1&t=1&srotate=1&w=640&h=480&crop=1', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
-        { kkjd: 113.208512, kkwd: 23.4072, kkmc: '新景豪苑', photo: 'https://pic1.58cdn.com.cn/anjuke_58/6e273653c8a56aca5261fd256e405807?w=696&h=522&crop=1&t=1&srotate=1&w=640&h=480&crop=1', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
-        { kkjd: 113.228322, kkwd: 23.5072, kkmc: '公寓11', photo: 'https://pic1.58cdn.com.cn/anjuke_58/26b4edbe0d8de9d65ee0fb7a1278a129?w=696&h=522&crop=1&t=1&srotate=1&w=640&h=480&crop=1', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
-        { kkjd: 113.228212, kkwd: 23.4072, kkmc: '钻石花园', photo: 'https://pic1.58cdn.com.cn/anjuke_58/26b4edbe0d8de9d65ee0fb7a1278a129?w=696&h=522&crop=1&t=1&srotate=1&w=640&h=480&crop=1', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
-        { kkjd: 113.248312, kkwd: 23.4072, kkmc: '天幕城', photo: 'https://pic1.58cdn.com.cn/anjuke_58/26b4edbe0d8de9d65ee0fb7a1278a129?w=696&h=522&crop=1&t=1&srotate=1&w=640&h=480&crop=1', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
-        { kkjd: 113.228312, kkwd: 23.4072, kkmc: '钻石花园', photo: 'https://pic1.58cdn.com.cn/anjuke_58/26b4edbe0d8de9d65ee0fb7a1278a129?w=696&h=522&crop=1&t=1&srotate=1&w=640&h=480&crop=1', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' }
+        { kkjd: 113.241246, kkwd: 23.431839, kkmc: '融创', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
+        { kkjd: 113.232191, kkwd: 23.434293, kkmc: '雪域华府', houseType: '2室2厅1卫  75 平  精装修', floor: ' 南  中层 / 30层', people: '210' },
+        { kkjd: 113.233844, kkwd: 23.411479, kkmc: '骏壹万邦',houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
+        { kkjd: 113.225256, kkwd: 23.395128, kkmc: '花果山', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
+        { kkjd: 113.243043, kkwd: 23.396654, kkmc: '锦尚蓬莱', },
+        { kkjd: 113.215626, kkwd: 23.403287, kkmc: '茶园雅居', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
+        { kkjd: 113.208512, kkwd: 23.401728, kkmc: '松园居', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
+        { kkjd: 113.221375, kkwd: 23.412175, kkmc: '公益别墅', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
+        { kkjd: 113.203697, kkwd: 23.394664, kkmc: '元华新村', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
+        { kkjd: 113.232838, kkwd: 23.4072, kkmc: '亚美大厦', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
+        { kkjd: 113.208512, kkwd: 23.4072, kkmc: '新景豪苑',  houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
+        { kkjd: 113.228322, kkwd: 23.5072, kkmc: '公寓11', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
+        { kkjd: 113.228212, kkwd: 23.4072, kkmc: '钻石花园', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
+        { kkjd: 113.248312, kkwd: 23.4072, kkmc: '天幕城', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' },
+        { kkjd: 113.228312, kkwd: 23.4072, kkmc: '钻石花园', houseType: '8层自建房（含电梯）精装修', floor: ' 南  中层 / 30层', people: '210' }
 
       ],
       jd1: '',
@@ -167,7 +167,6 @@ export default {
           this.floor = item.floor
           this.kkmc = item.kkmc
           this.title = item.kkmc
-          this.src = item.photo
           this.centerDialogVisible = true
         })
       })
