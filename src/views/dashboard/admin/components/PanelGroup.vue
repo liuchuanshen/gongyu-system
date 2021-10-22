@@ -145,7 +145,8 @@ export default {
         doorPswTime: null,
         houseId: '',
         housePsw: '',
-        housePswTime: null
+        housePswTime: null,
+        status:'1'
       },
       options: [{
         value: '101',
@@ -176,8 +177,8 @@ export default {
   },
   mounted() {
     this.$bus.$on('MessageBox', (data) => {
-      this.MessageBox = data.list.length
-      this.todolist = data.list
+      this.MessageBox = data.total
+      this.todolist = data.result
     })
   },
   methods: {
@@ -194,33 +195,30 @@ export default {
       }
     },
     update(item) {
+      
+      console.log('item',item)
+
       this.$confirm('将该条数据转入待办事项, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        const query = { 'id': item.id }
-        fetchSuccessMsg(query).then(response => {
-          if (response.code === 20000) {
-            this.drawer = true
-            this.todolist = data.list
-            this.$message({
-              type: 'success',
-              message: '添加到待办事项成功！'
-            })
-          }
-        })
+        // const query = { 'id': item.id }
+        // fetchSuccessMsg(query).then(response => {
+        //   if (response.code === 20000) {
+        //     this.drawer = true
+        //     this.todolist = data.list
+        //     this.$message({
+        //       type: 'success',
+        //       message: '添加到待办事项成功！'
+        //     })
+        //   }
+        // })
       }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消添加'
-        })
       })
     },
     sumbit() {
-      console.log('form', this.form)
       temporary(this.form).then((res) => {
-        console.log('res', res)
         if (res.data.code === 200) {
           this.watch = false
           this.$message.success('设置临时门禁密码成功')
