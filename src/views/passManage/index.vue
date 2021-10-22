@@ -61,21 +61,40 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="操作" width="200">
+      <el-table-column align="center" label="状态">
+        <template slot-scope="scope">
+          <span v-if="scope.row.status  === '0'" style="color:red">禁用</span>
+          <span v-if="scope.row.status  === '1'" style="color:#58bc58">启用</span>
+          <span v-if="scope.row.status  === '2'">到期</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="操作" width="500">
         <template slot-scope="scope">
           <el-button
             type="danger"
             size="mini"
             icon="el-icon-refresh"
-            @click="resetPass(scope.row)"
+            @click="disable(scope.row)"
+             :disabled="scope.row.status === '1' ? false:true"
           >
             禁用
+          </el-button>
+           <el-button
+            type="success"
+            size="mini"
+            icon="el-icon-check"
+            @click="enable(scope.row)"
+             :disabled="scope.row.status === '0'  ? false:true"
+          >
+            启用
           </el-button>
           <el-button
             type="warning"
             size="mini"
             icon="el-icon-refresh"
             @click="resetPass(scope.row)"
+             :disabled="scope.row.status === '1'  ? false:true"
           >
             重置密码
           </el-button>
@@ -83,8 +102,8 @@
             type="primary"
             size="mini"
             icon="el-icon-edit-outline"
-            style="marginLeft:0px;marginTop:10px"
             @click="editPass(scope.row)"
+             :disabled="scope.row.status === '1'  ? false:true"
           >
             修改密码
           </el-button>
@@ -103,7 +122,7 @@
 </template>
 
 <script>
-import { temporaryList } from '@/api/data'
+import { temporaryList,tempupdate } from '@/api/data'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
@@ -121,6 +140,8 @@ export default {
   },
   data() {
     return {
+      disable_status:false,
+      enable_status:false,
       dialogVisible: false,
       list: null,
       total: 0,
@@ -138,27 +159,31 @@ export default {
     }, 2000)
   },
   methods: {
-    resetPass(row) {
+    resetPass(rows) {
       this.$confirm('此操作将重置为默认密码, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(() => {
-          this.$message({
-            type: 'success',
-            message: '重置成功'
+          const data = {...rows}
+          data.doorPsw = '123456'
+          data.housePsw = '123456'
+          data.status='1'
+          tempupdate(data).then(res => {
+            if(res.data.code===200){
+              this.getList()
+              this.$message({
+                type: 'success',
+                message: '重置成功'
+              })
+            }
           })
-          row.csmm = '123456'
         })
         .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '取消重置'
-          })
         })
     },
-    editPass(row) {
+    editPass(rows) {
       this.$prompt('请输入需要修改的 6 位纯数字密码', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -166,17 +191,21 @@ export default {
         inputErrorMessage: '密码格式错误'
       })
         .then(({ value }) => {
-          this.$message({
-            type: 'success',
-            message: '密码已更改为 :' + value
+          const data = {...rows}
+          data.doorPsw = value
+          data.housePsw = value
+          data.status='1'
+          tempupdate(data).then(res => {
+            if(res.data.code===200){
+              this.getList()
+              this.$message({
+                type: 'success',
+                message: '密码已更改为 :' + value
+              })
+            }
           })
-          row.csmm = value
         })
         .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '取消更改'
-          })
         })
     },
     getList() {
@@ -197,7 +226,49 @@ export default {
     write(rows) {
       this.rows = rows
       this.dialogVisible = true
-    }
+    },
+    disable(rows){
+      this.$confirm('此操作将禁用门禁密码, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.listLoading = true
+          let data = {...rows}
+          data.status="0"
+          tempupdate(data).then(res => {
+            if(res.data.code===200){
+              this.getList()
+              this.$message({
+                type: 'success',
+                message: '禁用成功!'
+              });
+            }
+          })
+        }).catch(() => {        
+        });
+    },
+    enable(rows){
+      this.$confirm('此操作将启用门禁密码, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.listLoading = true
+          let data = {...rows}
+          data.status="1"
+          tempupdate(data).then(res => {
+            if(res.data.code===200){
+              this.getList()
+              this.$message({
+                type: 'success',
+                message: '启用成功!'
+              });
+            }
+          })
+        }).catch(() => {        
+        });
+    },
   }
 }
 </script>

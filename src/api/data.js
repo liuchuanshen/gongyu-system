@@ -27,3 +27,15 @@ export function temporary(data) {
 export function temporaryList(data) {
   return http.get('/houselist/temporaryList', data)
 }
+
+export function tempupdate(data) {
+  return http.get('/houselist/tempupdate', data)
+}
+
+export function login(data) {
+  return http.get('/houselist/login', data)
+}
+
+export function getMessage(data) {
+  return http.get('/houselist/messagebox', data)
+}

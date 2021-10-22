@@ -45,6 +45,26 @@
         </el-form-item>
       </el-tooltip>
 
+
+      <el-form-item prop="yzm">
+        <span class="svg-container">
+          <svg-icon icon-class="password" />
+        </span>
+        <el-input
+          ref="username"
+          v-model="loginForm.yzm"
+          placeholder="请输入验证码"
+          name="username"
+          type="text"
+          tabindex="1"
+          autocomplete="on"
+        />
+        <span class="show-pwd" @click="changeCode">
+             <identify :identifyCode="identifyCode"></identify>
+        </span>
+       
+      </el-form-item>
+
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">立即登录</el-button>
 
       <!-- <div style="position:relative">
@@ -74,15 +94,16 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
-import SocialSign from './components/SocialSignin'
+// import { validUsername } from '@/utils/validate'
+// import SocialSign from './components/SocialSignin'
+import identify from './components/identify'
 
 export default {
   name: 'Login',
-  components: { SocialSign },
+  components: {identify },
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
+      if (!value) {
         callback(new Error('请输入用户名'))
       } else {
         callback()
@@ -95,21 +116,35 @@ export default {
         callback()
       }
     }
+    const validateYzm = (rule, value, callback) => {
+      if (value!=this.identifyCode) {
+        this.loginForm.yzm=''
+        callback(new Error('验证码错误，请重新输入'))
+      } else {
+        callback()
+      }
+    }
     return {
       loginForm: {
         username: 'admin',
-        password: '111111'
+        password: '111111',
+        yzm:''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        password: [{ required: true, trigger: 'blur', validator: validatePassword }],
+        yzm: [{ required: true, trigger: 'blur', validator: validateYzm }]
       },
       passwordType: 'password',
       capsTooltip: false,
       loading: false,
       showDialog: false,
       redirect: undefined,
-      otherQuery: {}
+      otherQuery: {},
+      // 验证码初始值
+      identifyCode: '1234',
+      // 验证码的随机取值范围
+      identifyCodes: '1234567890'
     }
   },
   watch: {
@@ -128,6 +163,8 @@ export default {
     // window.addEventListener('storage', this.afterQRScan)
   },
   mounted() {
+     this.identifyCode = ''
+    this.makeCode(this.identifyCodes, 4)
     if (this.loginForm.username === '') {
       this.$refs.username.focus()
     } else if (this.loginForm.password === '') {
@@ -177,7 +214,7 @@ export default {
         }
         return acc
       }, {})
-    }
+    },
     // afterQRScan() {
     //   if (e.key === 'x-admin-oauth-code') {
     //     const code = getQueryObject(e.newValue)
@@ -196,6 +233,23 @@ export default {
     //     }
     //   }
     // }
+  // 点击验证码刷新验证码
+    changeCode () {
+      this.identifyCode = ''
+      this.makeCode(this.identifyCodes, 4)
+    },
+    // 生成一个随机整数  randomNum(0, 10) 0 到 10 的随机整数， 包含 0 和 10
+    randomNum (min, max) {
+      max = max + 1
+      return Math.floor(Math.random() * (max - min) + min)
+    },
+    // 随机生成验证码字符串
+    makeCode (data, len) {
+      for (let i = 0; i < len; i++) {
+        this.identifyCode += data[this.randomNum(0, data.length - 1)]
+        console.log('当前验证码=',this.identifyCode)
+      }
+    }
   }
 }
 </script>
@@ -227,7 +281,7 @@ $cursor: #fff;
       -webkit-appearance: none;
       border-radius: 0px;
       padding: 12px 5px 12px 15px;
-      color: $light_gray;
+      color:  black ;
       height: 47px;
       caret-color: $cursor;
 
@@ -240,7 +294,7 @@ $cursor: #fff;
 
   .el-form-item {
     border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.1);
+    background: #fdfbfb;
     border-radius: 5px;
     color: #454545;
   }
@@ -249,13 +303,13 @@ $cursor: #fff;
 
 <style lang="scss" scoped>
 $bg:#2d3a4b;
-$dark_gray:#889aa4;
+$dark_gray:black;
 $light_gray:#eee;
 
 .login-container {
   min-height: 100%;
   width: 100%;
-  background-color: $bg;
+  background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
   overflow: hidden;
 
   .login-form {
@@ -292,7 +346,7 @@ $light_gray:#eee;
 
     .title {
       font-size: 26px;
-      color: $light_gray;
+      color: #fdfbfb;
       margin: 0px auto 40px auto;
       text-align: center;
       font-weight: bold;

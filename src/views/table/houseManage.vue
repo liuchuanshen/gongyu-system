@@ -1,7 +1,21 @@
 <template>
   <div class="app-container">
 
-    123123123
+    <el-row :gutter="12">
+      <el-col :span="6">
+        <el-card shadow="hover">
+          <div class="box">
+              <div>1</div>
+              <div>2</div>
+              <div>3</div>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+
+
+
+
     <el-dialog title="编辑" :visible.sync="dialogFormVisible">
       <el-form
         ref="dataForm"
@@ -116,4 +130,19 @@ export default {
   }
 }
 </script>
-<style scoped></style>
+<style scoped>
+
+/deep/ .el-card{
+  border-left:5px solid #58bc58;
+  cursor: pointer ;
+}
+
+ /deep/ .el-card__body{
+    padding: 0;
+  }
+
+ .box{
+      padding: 5px;
+  }
+  
+</style>
