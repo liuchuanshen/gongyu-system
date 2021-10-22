@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
-    
-123123123
+
+    123123123
     <el-dialog title="编辑" :visible.sync="dialogFormVisible">
       <el-form
         ref="dataForm"
@@ -72,12 +72,11 @@ import {
   getuser, createUser
 } from '@/api/data'
 
-
 export default {
   name: 'Create',
   data() {
     return {
-      dialogFormVisible:false,
+      dialogFormVisible: false,
       temp: {
         id: '',
         fh: '',
@@ -88,8 +87,8 @@ export default {
         sjhm: '',
         hx: '',
         jfqk: ''
-      },
       }
+    }
   },
   created() {
     setTimeout(() => {
@@ -112,8 +111,8 @@ export default {
         this.total = response.data.data.total
         this.listLoading = false
       })
-    },
-    
+    }
+
   }
 }
 </script>

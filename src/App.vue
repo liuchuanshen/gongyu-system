@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: "App",
+  name: 'App',
   mounted() {
     // setTimeout(() => {
     //   window.L2Dwidget.init({
@@ -25,6 +25,6 @@ export default {
     //   });
     // }, 1000);
   }
-};
+}
 // ("../public/live2dw/");
 </script>

@@ -91,7 +91,6 @@
         </template>
       </el-table-column>
 
-
     </el-table>
     <pagination
       v-show="total > 0"
@@ -104,7 +103,7 @@
 </template>
 
 <script>
-import {  temporaryList } from '@/api/data'
+import { temporaryList } from '@/api/data'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
