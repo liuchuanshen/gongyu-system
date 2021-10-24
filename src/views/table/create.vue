@@ -26,7 +26,7 @@
       >
         新增
       </el-button>
-      <el-button
+      <!-- <el-button
         v-waves
         :loading="downloadLoading"
         class="filter-item"
@@ -35,7 +35,7 @@
         @click="handleDownload"
       >
         导出
-      </el-button>
+      </el-button> -->
     </div>
 
     <el-table
@@ -80,6 +80,11 @@
           <span class="link-type" @click="handleUpdate(row)">{{ row.xm }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="性别" align="center">
+        <template slot-scope="{ row }">
+          <span class="link-type">{{ row.xb }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="身份证号码" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.sfzhm }}</span>
@@ -103,6 +108,11 @@
           <el-tag v-if="row.jfqk === 'n'" type="danger">
             缴费异常
           </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" class-name="status-col">
+        <template slot-scope="{ row }">
+          <el-tag type="success">{{ row.status }}</el-tag>
         </template>
       </el-table-column>
       <!-- <el-table-column
@@ -142,7 +152,7 @@
       @pagination="getList"
     />
 
-    <el-dialog title="编辑" :visible.sync="dialogFormVisible">
+    <el-dialog title="新增" :visible.sync="dialogFormVisible">
       <el-form
         ref="dataForm"
         :model="temp"
@@ -172,6 +182,10 @@
         <el-form-item label="姓名" prop="xm">
           <el-input v-model="temp.xm" />
         </el-form-item>
+        <el-form-item label="性别" prop="xm">
+          <el-radio v-model="temp.xb" label="男">男</el-radio>
+          <el-radio v-model="temp.xb" label="女">女</el-radio>
+        </el-form-item>
         <el-form-item label="身份证号码" prop="sfzhm">
           <el-input v-model="temp.sfzhm" />
         </el-form-item>
@@ -179,14 +193,19 @@
           <el-input v-model="temp.sjhm" />
         </el-form-item>
         <el-form-item label="户型" prop="hx" style="marginRight:20px">
-          <el-radio v-model="temp.hx" label="一房一厅">一房一厅</el-radio>
-          <el-radio v-model="temp.hx" label="两房一厅">两房一厅</el-radio>
+          <el-radio v-model="temp.hx" label="单间">单间</el-radio>
         </el-form-item>
         <el-form-item label="房号" prop="fh" style="marginRight:20px">
-          <el-radio v-model="temp.fh" label="一房一厅">一房一厅</el-radio>
-          <el-radio v-model="temp.fh" label="两房一厅">两房一厅</el-radio>
+          <el-select v-model="temp.fh" placeholder="请选择">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
         </el-form-item>
-        <el-form-item label="缴费情况" prop="jfqk" style="marginRight:20px">
+        <el-form-item label="押金缴费情况" prop="jfqk" style="marginRight:20px">
           <el-radio v-model="temp.jfqk" label="y">已交</el-radio>
           <el-radio v-model="temp.jfqk" label="n">未交</el-radio>
         </el-form-item>
@@ -264,6 +283,24 @@ export default {
   // },
   data() {
     return {
+      options: [
+        {
+          value: '101',
+          label: '101'
+        },
+        {
+          value: '102',
+          label: '102'
+        },
+        {
+          value: '201',
+          label: '201'
+        },
+        {
+          value: '202',
+          label: '202'
+        }
+      ],
       tableKey: 0,
       list: null,
       total: 0,
@@ -286,6 +323,7 @@ export default {
         rzsj: '',
         zysj: '',
         xm: '',
+        xb: '',
         sfzhm: '',
         sjhm: '',
         hx: '',
@@ -463,8 +501,8 @@ export default {
     handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['ID', 'Date', '姓名', '身份证号码', '缴费情况']
-        const filterVal = ['ID', 'Date', '姓名', '身份证号码', '缴费情况']
+        const tHeader = ['ID', '房号', '入住时间', '租约时间', '姓名', '性别', '身份证号码', '手机号码', '户型', '缴费情况', '状态']
+        const filterVal = ['ID', '房号', '入住时间', '租约时间', '姓名', '性别', '身份证号码', '手机号码', '户型', '缴费情况', '状态']
         const data = this.formatJson(filterVal)
         excel.export_json_to_excel({
           header: tHeader,

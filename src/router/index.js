@@ -140,13 +140,13 @@ export const asyncRoutes = [
         component: () => import('@/views/passManage/index'),
         name: 'Password',
         meta: { title: '密码管理', icon: 'password' }
-      },
-      {
-        path: 'tab',
-        component: () => import('@/views/tab/index'),
-        name: 'Tab',
-        meta: { title: '水电费管理', icon: 'tab' }
       }
+      // {
+      //   path: 'tab',
+      //   component: () => import('@/views/tab/index'),
+      //   name: 'Tab',
+      //   meta: { title: '水电费管理', icon: 'tab' }
+      // }
     ]
   },
 

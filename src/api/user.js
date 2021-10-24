@@ -8,12 +8,12 @@ import request from '@/utils/request'
 //   })
 // }
 
-export function login(data) {
+// export function login(data) {
 
-  console.log('data',data)
+//   console.log('data',data)
 
-  return http.get('/houselist/login', data)
-}
+//   return http.get('/houselist/login', data)
+// }
 
 export function getInfo(token) {
   return request({

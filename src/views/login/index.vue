@@ -45,7 +45,6 @@
         </el-form-item>
       </el-tooltip>
 
-
       <el-form-item prop="yzm">
         <span class="svg-container">
           <svg-icon icon-class="password" />
@@ -60,9 +59,9 @@
           autocomplete="on"
         />
         <span class="show-pwd" @click="changeCode">
-             <identify :identifyCode="identifyCode"></identify>
+          <identify :identify-code="identifyCode" />
         </span>
-       
+
       </el-form-item>
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">立即登录</el-button>
@@ -100,7 +99,7 @@ import identify from './components/identify'
 
 export default {
   name: 'Login',
-  components: {identify },
+  components: { identify },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!value) {
@@ -117,8 +116,8 @@ export default {
       }
     }
     const validateYzm = (rule, value, callback) => {
-      if (value!=this.identifyCode) {
-        this.loginForm.yzm=''
+      if (value != this.identifyCode) {
+        this.loginForm.yzm = ''
         callback(new Error('验证码错误，请重新输入'))
       } else {
         callback()
@@ -126,9 +125,11 @@ export default {
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '111111',
-        yzm:''
+        // username: 'admin',
+        // password: '111111',
+        username: '',
+        password: '',
+        yzm: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -163,7 +164,7 @@ export default {
     // window.addEventListener('storage', this.afterQRScan)
   },
   mounted() {
-     this.identifyCode = ''
+    this.identifyCode = ''
     this.makeCode(this.identifyCodes, 4)
     if (this.loginForm.username === '') {
       this.$refs.username.focus()
@@ -233,21 +234,21 @@ export default {
     //     }
     //   }
     // }
-  // 点击验证码刷新验证码
-    changeCode () {
+    // 点击验证码刷新验证码
+    changeCode() {
       this.identifyCode = ''
       this.makeCode(this.identifyCodes, 4)
     },
     // 生成一个随机整数  randomNum(0, 10) 0 到 10 的随机整数， 包含 0 和 10
-    randomNum (min, max) {
+    randomNum(min, max) {
       max = max + 1
       return Math.floor(Math.random() * (max - min) + min)
     },
     // 随机生成验证码字符串
-    makeCode (data, len) {
+    makeCode(data, len) {
       for (let i = 0; i < len; i++) {
         this.identifyCode += data[this.randomNum(0, data.length - 1)]
-        console.log('当前验证码=',this.identifyCode)
+        console.log('当前验证码=', this.identifyCode)
       }
     }
   }

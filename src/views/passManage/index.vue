@@ -27,7 +27,7 @@
       <el-table-column
         align="center"
         class-name="status-col"
-        label="房号"
+        label="涉及房号"
         width="110"
       >
         <template slot-scope="{ row }">
@@ -63,9 +63,9 @@
 
       <el-table-column align="center" label="状态">
         <template slot-scope="scope">
-          <span v-if="scope.row.status  === '0'" style="color:red">禁用</span>
-          <span v-if="scope.row.status  === '1'" style="color:#58bc58">启用</span>
-          <span v-if="scope.row.status  === '2'">到期</span>
+          <span v-if="scope.row.status === '0'" style="color:red">禁用</span>
+          <span v-if="scope.row.status === '1'" style="color:#58bc58">启用</span>
+          <span v-if="scope.row.status === '2'">到期</span>
         </template>
       </el-table-column>
 
@@ -75,17 +75,17 @@
             type="danger"
             size="mini"
             icon="el-icon-refresh"
+            :disabled="scope.row.status === '1' ? false:true"
             @click="disable(scope.row)"
-             :disabled="scope.row.status === '1' ? false:true"
           >
             禁用
           </el-button>
-           <el-button
+          <el-button
             type="success"
             size="mini"
             icon="el-icon-check"
+            :disabled="scope.row.status === '0' ? false:true"
             @click="enable(scope.row)"
-             :disabled="scope.row.status === '0'  ? false:true"
           >
             启用
           </el-button>
@@ -93,8 +93,8 @@
             type="warning"
             size="mini"
             icon="el-icon-refresh"
+            :disabled="scope.row.status === '1' ? false:true"
             @click="resetPass(scope.row)"
-             :disabled="scope.row.status === '1'  ? false:true"
           >
             重置密码
           </el-button>
@@ -102,8 +102,8 @@
             type="primary"
             size="mini"
             icon="el-icon-edit-outline"
+            :disabled="scope.row.status === '1' ? false:true"
             @click="editPass(scope.row)"
-             :disabled="scope.row.status === '1'  ? false:true"
           >
             修改密码
           </el-button>
@@ -122,7 +122,7 @@
 </template>
 
 <script>
-import { temporaryList,tempupdate } from '@/api/data'
+import { temporaryList, tempupdate } from '@/api/data'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
@@ -140,8 +140,8 @@ export default {
   },
   data() {
     return {
-      disable_status:false,
-      enable_status:false,
+      disable_status: false,
+      enable_status: false,
       dialogVisible: false,
       list: null,
       total: 0,
@@ -166,12 +166,12 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          const data = {...rows}
+          const data = { ...rows }
           data.doorPsw = '123456'
           data.housePsw = '123456'
-          data.status='1'
+          data.status = '1'
           tempupdate(data).then(res => {
-            if(res.data.code===200){
+            if (res.data.code === 200) {
               this.getList()
               this.$message({
                 type: 'success',
@@ -191,12 +191,12 @@ export default {
         inputErrorMessage: '密码格式错误'
       })
         .then(({ value }) => {
-          const data = {...rows}
+          const data = { ...rows }
           data.doorPsw = value
           data.housePsw = value
-          data.status='1'
+          data.status = '1'
           tempupdate(data).then(res => {
-            if(res.data.code===200){
+            if (res.data.code === 200) {
               this.getList()
               this.$message({
                 type: 'success',
@@ -227,48 +227,48 @@ export default {
       this.rows = rows
       this.dialogVisible = true
     },
-    disable(rows){
+    disable(rows) {
       this.$confirm('此操作将禁用门禁密码, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.listLoading = true
-          let data = {...rows}
-          data.status="0"
-          tempupdate(data).then(res => {
-            if(res.data.code===200){
-              this.getList()
-              this.$message({
-                type: 'success',
-                message: '禁用成功!'
-              });
-            }
-          })
-        }).catch(() => {        
-        });
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.listLoading = true
+        const data = { ...rows }
+        data.status = '0'
+        tempupdate(data).then(res => {
+          if (res.data.code === 200) {
+            this.getList()
+            this.$message({
+              type: 'success',
+              message: '禁用成功!'
+            })
+          }
+        })
+      }).catch(() => {
+      })
     },
-    enable(rows){
+    enable(rows) {
       this.$confirm('此操作将启用门禁密码, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.listLoading = true
-          let data = {...rows}
-          data.status="1"
-          tempupdate(data).then(res => {
-            if(res.data.code===200){
-              this.getList()
-              this.$message({
-                type: 'success',
-                message: '启用成功!'
-              });
-            }
-          })
-        }).catch(() => {        
-        });
-    },
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.listLoading = true
+        const data = { ...rows }
+        data.status = '1'
+        tempupdate(data).then(res => {
+          if (res.data.code === 200) {
+            this.getList()
+            this.$message({
+              type: 'success',
+              message: '启用成功!'
+            })
+          }
+        })
+      }).catch(() => {
+      })
+    }
   }
 }
 </script>

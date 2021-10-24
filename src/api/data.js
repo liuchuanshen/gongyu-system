@@ -39,3 +39,23 @@ export function login(data) {
 export function getMessage(data) {
   return http.get('/houselist/messagebox', data)
 }
+
+export function getTodolist(data) {
+  return http.get('/houselist/getTodolist', data)
+}
+
+export function deleteMessage(data) {
+  return http.get('/houselist/deleteMessage', data)
+}
+
+export function createTodolist(data) {
+  return http.get('/houselist/createTodolist', data)
+}
+
+export function updateTodolist(data) {
+  return http.get('/houselist/updateTodolist', data)
+}
+
+export function checkout(data) {
+  return http.get('/houselist/checkout', data)
+}

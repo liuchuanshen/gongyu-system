@@ -129,8 +129,8 @@
 
 <script>
 import CountTo from 'vue-count-to'
-import { fetchSuccessMsg } from '@/api/article'
-import { getlist, getuser, temporary } from '@/api/data'
+// import { fetchSuccessMsg } from '@/api/article'
+import { getlist, getuser, temporary, deleteMessage, createTodolist } from '@/api/data'
 
 export default {
   components: {
@@ -146,7 +146,7 @@ export default {
         houseId: '',
         housePsw: '',
         housePswTime: null,
-        status:'1'
+        status: '1'
       },
       options: [{
         value: '101',
@@ -195,14 +195,34 @@ export default {
       }
     },
     update(item) {
-      
-      console.log('item',item)
-
       this.$confirm('将该条数据转入待办事项, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+        const myDate = new Date()
+        item.process.push({
+          date: myDate.getFullYear() + '-' + myDate.getMonth() + '-' + myDate.getDate() + '\xa0' + myDate.getHours() + ':' + myDate.getMinutes() + ':' + myDate.getSeconds(),
+          id: '2',
+          status: '1',
+          statusStr: '处理中'
+        })
+        console.log('item', item)
+
+        createTodolist(item).then(res => {
+          if (res.data.code === 200) {
+            deleteMessage({ 'id': item.id }).then((res) => {
+              if (res.data.code === 200) {
+                this.$router.go(0)
+                this.$message({
+                  type: 'success',
+                  message: '添加到待办事项成功！'
+                })
+              }
+            })
+          }
+        })
+
         // const query = { 'id': item.id }
         // fetchSuccessMsg(query).then(response => {
         //   if (response.code === 20000) {

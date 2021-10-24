@@ -2,19 +2,19 @@
   <div class="app-container">
 
     <el-row :gutter="12">
-      <el-col :span="6">
-        <el-card shadow="hover">
+      <el-col v-for="item in list" :key="item.id" :span="3">
+        <el-card shadow="hover" class="box_outside">
           <div class="box">
-              <div>1</div>
-              <div>2</div>
-              <div>3</div>
+            <div>{{ item.fh }}</div>
+            <div>南-23m²-¥3200</div>
+            <div>到期日{{ item.zysj }}</div>
+          </div>
+          <div class="status">
+            <div>{{ item.status }}</div>
           </div>
         </el-card>
       </el-col>
     </el-row>
-
-
-
 
     <el-dialog title="编辑" :visible.sync="dialogFormVisible">
       <el-form
@@ -101,7 +101,8 @@ export default {
         sjhm: '',
         hx: '',
         jfqk: ''
-      }
+      },
+      list: []
     }
   },
   created() {
@@ -140,9 +141,24 @@ export default {
  /deep/ .el-card__body{
     padding: 0;
   }
-
- .box{
-      padding: 5px;
+  .box_outside{
+    position: relative;
   }
-  
+ .box{
+    font-size: 14px;
+    padding: 10px;
+  }
+  .box div{
+    height: 25px;
+  }
+  .status{
+    border-bottom-left-radius:10px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #58bc58;
+    font-size: 12px;
+    padding: 10px;
+    color: #fff;
+  }
 </style>
