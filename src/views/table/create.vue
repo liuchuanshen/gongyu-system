@@ -156,6 +156,7 @@
       <el-form
         ref="dataForm"
         :model="temp"
+        :rules="loginRules"
         label-position="left"
         label-width="100px"
         style="width: 400px; margin-left:50px;"
@@ -182,7 +183,7 @@
         <el-form-item label="姓名" prop="xm">
           <el-input v-model="temp.xm" />
         </el-form-item>
-        <el-form-item label="性别" prop="xm">
+        <el-form-item label="性别" prop="xb">
           <el-radio v-model="temp.xb" label="男">男</el-radio>
           <el-radio v-model="temp.xb" label="女">女</el-radio>
         </el-form-item>
@@ -282,7 +283,34 @@ export default {
   //   }
   // },
   data() {
+    const validateUsername = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请输入姓名'))
+      } else {
+        callback()
+      }
+    }
+    const validateSfzhm = (rule, value, callback) => {
+      if (value.length < 6) {
+        callback(new Error('密码长度不得少于6位'))
+      } else {
+        callback()
+      }
+    }
+    const validateSjhm = (rule, value, callback) => {
+      if (value != this.identifyCode) {
+        this.loginForm.yzm = ''
+        callback(new Error('验证码错误，请重新输入'))
+      } else {
+        callback()
+      }
+    }
     return {
+      loginRules: {
+        xm: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        sfzhm: [{ required: true, trigger: 'blur', validator: validateSfzhm }],
+        sjhm: [{ required: true, trigger: 'blur', validator: validateSjhm }]
+      },
       options: [
         {
           value: '101',
