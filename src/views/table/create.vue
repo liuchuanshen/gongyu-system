@@ -291,18 +291,23 @@ export default {
       }
     }
     const validateSfzhm = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('密码长度不得少于6位'))
-      } else {
+      const idcardReg = /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/
+      if (idcardReg.test(value)) {
+        // 合法
         callback()
+      } else {
+        callback(new Error('身份证错误,请重新输入'))
+        this.temp.sfzhm = ''
       }
     }
     const validateSjhm = (rule, value, callback) => {
-      if (value != this.identifyCode) {
-        this.loginForm.yzm = ''
-        callback(new Error('验证码错误，请重新输入'))
-      } else {
+      const phoneReg = /^[1](([3][0-9])|([4][5-9])|([5][0-3,5-9])|([6][5,6])|([7][0-8])|([8][0-9])|([9][1,8,9]))[0-9]{8}$/
+      if (phoneReg.test(value)) {
+        // 合法
         callback()
+      } else {
+        callback(new Error('手机号错误,请重新输入'))
+        this.temp.sjhm = ''
       }
     }
     return {
