@@ -42,9 +42,9 @@ router.get('/password', async(req, res) => {
 
 // 新建租客数据写进mongoDB
 router.get('/create', async(req, res) => {
-  const { id, fh, rzsj, zysj, xm, xb, sfzhm, sjhm, hx, jfqk,status } = req.query
+  const { id, fh, rzsj, zysj, xm, xb, sfzhm, sjhm, hx, jfqk, status } = req.query
   try {
-    await mongo.create(colNameList, { id, fh, rzsj, zysj, xm, xb, sfzhm, sjhm, hx, jfqk,status })
+    await mongo.create(colNameList, { id, fh, rzsj, zysj, xm, xb, sfzhm, sjhm, hx, jfqk, status })
     res.send(formatData())
   } catch (err) {
     res.send(formatData({ code: 400 }))
@@ -69,9 +69,9 @@ router.get('/update', async(req, res) => {
 // api/houselist/temporary
 // 新建临时看房的密码数据写进mongoDB
 router.get('/temporary', async(req, res) => {
-  const { doorPsw, doorPswTime, houseId, housePsw, housePswTime } = req.query
+  const { doorPsw, doorPswTime, houseId, housePsw, housePswTime, status } = req.query
   try {
-    await mongo.create(colNamePsw, { doorPsw, doorPswTime, houseId, housePsw, housePswTime })
+    await mongo.create(colNamePsw, { doorPsw, doorPswTime, houseId, housePsw, housePswTime, status })
     res.send(formatData())
   } catch (err) {
     res.send(formatData({ code: 400 }))
@@ -209,7 +209,6 @@ router.get('/resources', async(req, res) => {
   const result = await mongo.find(colNameResources, {}, { skip, limit, sort, total })
   res.send(formatData({ data: total ? result : result.result }))
 })
-
 
 // api/houselist/updateTodolist
 // 修改房源信息状态

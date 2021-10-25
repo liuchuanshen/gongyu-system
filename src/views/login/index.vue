@@ -196,8 +196,11 @@ export default {
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm)
             .then(() => {
-              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-              this.loading = false
+              this.$message.success('登录成功')
+              setTimeout(() => {
+                this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+                this.loading = false
+              }, 5000)
             })
             .catch(() => {
               this.loading = false
