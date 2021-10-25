@@ -9,6 +9,7 @@ const colNamePsw = 'password'
 const colNameUser = 'user'
 const colNameMessagebox = 'messagebox'
 const colNameTodolist = 'todolist'
+const colNameResources = 'resources'
 
 // api/houselist/list
 // 所有租户分页信息
@@ -20,13 +21,10 @@ router.get('/list', async(req, res) => {
   } else {
     name = { 'xm': name }
   }
-  console.log('name=', name)
-
   const skip = (page - 1) * size
   const limit = size * 1
   total = !((total == '0' || total == 'false'))
   const result = await mongo.find(colNameList, name, { skip, limit, sort, total })
-  console.log('result=', result)
   res.send(formatData({ data: total ? result : result.result }))
 })
 
@@ -44,9 +42,9 @@ router.get('/password', async(req, res) => {
 
 // 新建租客数据写进mongoDB
 router.get('/create', async(req, res) => {
-  const { id, fh, rzsj, zysj, xm, xb, sfzhm, sjhm, hx, jfqk } = req.query
+  const { id, fh, rzsj, zysj, xm, xb, sfzhm, sjhm, hx, jfqk,status } = req.query
   try {
-    await mongo.create(colNameList, { id, fh, rzsj, zysj, xm, xb, sfzhm, sjhm, hx, jfqk })
+    await mongo.create(colNameList, { id, fh, rzsj, zysj, xm, xb, sfzhm, sjhm, hx, jfqk,status })
     res.send(formatData())
   } catch (err) {
     res.send(formatData({ code: 400 }))
@@ -195,6 +193,30 @@ router.get('/checkout', async(req, res) => {
   const { id, status } = req.query
   try {
     await mongo.checkout(colNameList, { 'id': id }, { status })
+    res.send(formatData())
+  } catch (err) {
+    res.send(formatData({ code: 400 }))
+  }
+})
+
+// api/houselist/resources
+// 所有房源信息列表分页信息
+router.get('/resources', async(req, res) => {
+  let { page = 1, size = 50, sort = 'regtime', total } = req.query
+  const skip = (page - 1) * size
+  const limit = size * 1
+  total = !((total == '0' || total == 'false'))
+  const result = await mongo.find(colNameResources, {}, { skip, limit, sort, total })
+  res.send(formatData({ data: total ? result : result.result }))
+})
+
+
+// api/houselist/updateTodolist
+// 修改房源信息状态
+router.get('/updateResources', async(req, res) => {
+  const { fh, status } = req.query
+  try {
+    await mongo.updateResources(colNameResources, { 'fh': fh }, { status })
     res.send(formatData())
   } catch (err) {
     res.send(formatData({ code: 400 }))

@@ -59,3 +59,11 @@ export function updateTodolist(data) {
 export function checkout(data) {
   return http.get('/houselist/checkout', data)
 }
+
+export function resources(data) {
+  return http.get('/houselist/resources', data)
+}
+
+export function updateResources(data) {
+  return http.get('/houselist/updateResources', data)
+}

@@ -247,7 +247,7 @@
 
 <script>
 import {
-  getuser, createUser
+  getuser, createUser,updateResources
 } from '@/api/data'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
@@ -445,7 +445,8 @@ export default {
         sfzhm: '',
         sjhm: '',
         hx: '',
-        jfqk: ''
+        jfqk: '',
+        status:'入住'
       }
     },
     handleCreate() {
@@ -462,28 +463,20 @@ export default {
           this.temp.id = this.total + 1
           createUser(this.temp).then((res) => {
             if (res.data.code === 200) {
-              this.getList()
-              // this.list.unshift(this.temp)
-              this.dialogFormVisible = false
-              this.$notify({
-                title: '成功',
-                message: '新增租户成功',
-                type: 'success',
-                duration: 5000
+              updateResources({'fh':this.temp.fh,'status':'入住'}).then((res)=>{
+                  if (res.data.code === 200) {
+                    this.$notify({
+                      title: '成功',
+                      message: '新增租户成功',
+                      type: 'success',
+                      duration: 5000
+                    })
+                    this.getList()
+                    this.dialogFormVisible = false
+                  }
               })
             }
           })
-
-          // createArticle(this.temp).then(() => {
-          //   this.list.unshift(this.temp)
-          //   this.dialogFormVisible = false
-          //   this.$notify({
-          //     title: 'Success',
-          //     message: 'Created Successfully',
-          //     type: 'success',
-          //     duration: 2000
-          //   })
-          // })
         }
       })
     },

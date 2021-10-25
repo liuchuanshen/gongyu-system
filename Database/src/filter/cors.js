@@ -10,7 +10,6 @@ module.exports = (req, res, next) => {
   res.header('Access-Control-Allow-Methods', '*')
   res.header('Access-Control-Allow-Headers', '*')
   const origin = req.get('Origin')
-  console.log('origin=', origin)
   if (allowOrigin.includes(origin)) {
     res.set({
       'Access-Control-Allow-Origin': origin,
@@ -24,7 +23,6 @@ module.exports = (req, res, next) => {
       next()
     }
   } else {
-    console.log(22222)
     next()
   }
 }

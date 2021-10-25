@@ -145,6 +145,30 @@ async function checkout(colName, query, data) {
 }
 
 /**
+ * 改：房源信息修改状态
+ * @param {String} colName  集合名称
+ * @param {Object} query    查询条件
+ * @param {Object} data     更新操作
+ */
+ async function updateResources(colName, query, data) {
+  const { db, client } = await connect()
+
+  // 获取集合
+  const col = db.collection(colName)
+
+  if (typeof query._id === 'string') {
+    // 600a398f7fb70cd40a42e1f9 -> ObjectId("600a398f7fb70cd40a42e1f9")
+    query._id = ObjectId(query._id)
+  }
+
+  const result = await col.updateOne(query, { $set: { 'status': data.status }})
+
+  client.close()
+  return result
+}
+
+
+/**
    * 查：查询数据
    * @param {String} colName    集合名称
    * @param {Object} query      查询条件
@@ -205,7 +229,8 @@ module.exports = {
   find,
   updatetemp,
   updateTodolist,
-  checkout
+  checkout,
+  updateResources
 }
 
 //   db.getCollection('password').insert([ { id: '1', fh: '101', rzsj: '2020-1-2', zysj: '2021-12-31', xm: '张三', csmm: '239294', sjhm: '13762547362'},{ id: '2', fh: '102', rzsj: '2021-10-2', zysj: '2021-12-31', xm: '李四', csmm: '831254', sjhm: '13764547362'},{ id: '3', fh: '201', rzsj: '2020-4-10', zysj: '2021-12-31', xm: '王育林', csmm: '439292', sjhm: '1376254362'},{ id: '4', fh: '202', rzsj: '2020-5-5', zysj: '2021-12-31', xm: '江韵琳', csmm: '791224', sjhm: '13362547362'},{ id: '5', fh: '301', rzsj: '2019-3-17', zysj: '2021-12-31', xm: '刘飞', csmm: '632291', sjhm: '13362547362'},{ id: '6', fh: '302', rzsj: '2020-8-5', zysj: '2021-12-31', xm: '王小五', csmm: '291294', sjhm: '13962547362'},{ id: '7', fh: '401', rzsj: '2020-11-25', zysj: '2021-12-31', xm: '卢科研', csmm: '239294', sjhm: '137625237362'},{ id: '8', fh: '402', rzsj: '2017-1-25', zysj: '2021-12-31', xm: '哈力克', csmm: '431204', sjhm: '137625433232'},{ id: '9', fh: '501', rzsj: '2028-9-20', zysj: '2021-12-31', xm: '西坝口', csmm: '021294', sjhm: '13762541262'},{ id: '10', fh: '502', rzsj: '2021-2-27', zysj: '2021-12-31', xm: '阿萨德', csmm: '439292', sjhm: '13126254362'},])

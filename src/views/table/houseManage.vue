@@ -1,15 +1,30 @@
 <template>
   <div class="app-container">
 
+    <div class="detail">
+      共<span class="num">{{total}}</span>
+      间，出租率：<span class="num">{{rental}}</span>
+    </div>
+
     <el-row :gutter="12">
       <el-col v-for="item in list" :key="item.id" :span="3">
-        <el-card shadow="hover" class="box_outside">
+        <el-card shadow="hover" class="box_outside_1" v-if="item.status==='入住'">
           <div class="box">
             <div>{{ item.fh }}</div>
             <div>南-23m²-¥3200</div>
             <div>到期日{{ item.zysj }}</div>
           </div>
-          <div class="status">
+          <div class="status_1">
+            <div>{{ item.status }}</div>
+          </div>
+        </el-card >
+         <el-card shadow="hover" class="box_outside_2" v-if="item.status==='闲置'">
+          <div class="box">
+            <div>{{ item.fh }}</div>
+            <div>南-23m²-¥3200</div>
+            <div>到期日{{ item.zysj }}</div>
+          </div>
+          <div class="status_2" >
             <div>{{ item.status }}</div>
           </div>
         </el-card>
@@ -83,7 +98,7 @@
 
 <script>
 import {
-  getuser, createUser
+  getuser, resources
 } from '@/api/data'
 
 export default {
@@ -102,7 +117,9 @@ export default {
         hx: '',
         jfqk: ''
       },
-      list: []
+      list: [],
+      total:'',
+      rental:''
     }
   },
   created() {
@@ -113,17 +130,18 @@ export default {
   methods: {
     getList(name) {
       this.listLoading = true
-
-      if (name === '' || name === undefined) {
-        name = {}
-      } else {
-        name = { 'name': name }
-      }
-      console.log('name', name)
-      getuser(name).then(response => {
+      resources(name).then(response => {
         this.list = response.data.data.result
-        this.temp.id = this.list.length + 1
+        // this.temp.id = this.list.length + 1
         this.total = response.data.data.total
+
+        let sum = 0
+        this.list.forEach((item)=>{
+          if(item.status==="入住"){
+            sum++
+          }
+        })
+        this.rental = (sum / this.total) * 100+"%"
         this.listLoading = false
       })
     }
@@ -133,15 +151,26 @@ export default {
 </script>
 <style scoped>
 
+.detail{
+  margin: 10px;
+}
+.num{
+  color: blue;
+}
+
 /deep/ .el-card{
-  border-left:5px solid #58bc58;
   cursor: pointer ;
 }
 
  /deep/ .el-card__body{
     padding: 0;
   }
-  .box_outside{
+  .box_outside_1{
+    border-left:5px solid #58bc58;
+    position: relative;
+  }
+  .box_outside_2{
+    border-left:5px solid red;
     position: relative;
   }
  .box{
@@ -151,7 +180,7 @@ export default {
   .box div{
     height: 25px;
   }
-  .status{
+  .status_1{
     border-bottom-left-radius:10px;
     position: absolute;
     top: 0;
@@ -161,4 +190,17 @@ export default {
     padding: 10px;
     color: #fff;
   }
+  .status_2{
+    border-bottom-left-radius:10px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: red;
+    font-size: 12px;
+    padding: 10px;
+    color: #fff;
+  }
+
+
+
 </style>

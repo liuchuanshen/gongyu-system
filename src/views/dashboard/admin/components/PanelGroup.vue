@@ -27,29 +27,21 @@
           </div>
         </div>
       </el-col>
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel" @click="handleSetLineChartData('purchases')">
-          <div class="card-panel-icon-wrapper icon-money">
-            <svg-icon icon-class="money" class-name="card-panel-icon" />
-          </div>
-          <div class="card-panel-description">
+     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+        <div class="card-panel" @click="handleSetLineChartData('watch')">
+          <div class="card-panel-description-other">
             <div class="card-panel-text">
-              已收费用
+              出租率{{rental_czl}}
             </div>
-            <count-to :start-val="0" :end-val="123" :duration="3200" class="card-panel-num" />
           </div>
         </div>
       </el-col>
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel" @click="handleSetLineChartData('purchases')">
-          <div class="card-panel-icon-wrapper icon-money">
-            <svg-icon icon-class="money" class-name="card-panel-icon" />
-          </div>
-          <div class="card-panel-description">
+     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+        <div class="card-panel" @click="handleSetLineChartData('watch')">
+          <div class="card-panel-description-other">
             <div class="card-panel-text">
-              未收费用
+              空置率{{rental_kzl}}
             </div>
-            <count-to :start-val="0" :end-val="123" :duration="3200" class="card-panel-num" />
           </div>
         </div>
       </el-col>
@@ -130,7 +122,7 @@
 <script>
 import CountTo from 'vue-count-to'
 // import { fetchSuccessMsg } from '@/api/article'
-import { getlist, getuser, temporary, deleteMessage, createTodolist } from '@/api/data'
+import { getlist, getuser, temporary, deleteMessage, createTodolist,resources } from '@/api/data'
 
 export default {
   components: {
@@ -169,7 +161,9 @@ export default {
       watch: null,
       todolist: [],
       MessageBox: null,
-      userNumber: null
+      userNumber: null,
+      rental_czl:'',
+      rental_kzl:''
     }
   },
   created() {
@@ -186,12 +180,32 @@ export default {
       getuser().then((response) => {
         this.userNumber = response.data.data.total
       })
+
+       resources(name).then(response => {
+        this.list = response.data.data.result
+        this.total = response.data.data.total
+        let czl = 0
+        let kzl = 0
+        this.list.forEach((item)=>{
+          if(item.status==="入住"){
+            czl++
+          }else if(item.status==="闲置"){
+            kzl++
+          }
+        })
+        this.rental_czl = (czl / this.total) * 100+"%"
+        this.rental_kzl = (kzl / this.total) * 100+"%"
+        this.listLoading = false
+      })
+
     },
     handleSetLineChartData(type) {
       if (type === 'messages') {
         this.drawer = true
       } else if (type === 'watch') {
         this.watch = true
+      } else if (type === 'newVisitis'){
+        this.$router.push('/list/edit')
       }
     },
     update(item) {
