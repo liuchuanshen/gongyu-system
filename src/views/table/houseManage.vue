@@ -2,13 +2,13 @@
   <div class="app-container">
 
     <div class="detail">
-      共<span class="num">{{total}}</span>
-      间，出租率：<span class="num">{{rental}}</span>
+      共<span class="num">{{ total }}</span>
+      间，出租率：<span class="num">{{ rental }}</span>
     </div>
 
     <el-row :gutter="12">
       <el-col v-for="item in list" :key="item.id" :span="3">
-        <el-card shadow="hover" class="box_outside_1" v-if="item.status==='入住'">
+        <el-card v-if="item.status==='入住'" shadow="hover" class="box_outside_1">
           <div class="box">
             <div>{{ item.fh }}</div>
             <div>南-23m²-¥3200</div>
@@ -17,14 +17,14 @@
           <div class="status_1">
             <div>{{ item.status }}</div>
           </div>
-        </el-card >
-         <el-card shadow="hover" class="box_outside_2" v-if="item.status==='闲置'">
+        </el-card>
+        <el-card v-if="item.status==='闲置'" shadow="hover" class="box_outside_2">
           <div class="box">
             <div>{{ item.fh }}</div>
             <div>南-23m²-¥3200</div>
             <div>到期日{{ item.zysj }}</div>
           </div>
-          <div class="status_2" >
+          <div class="status_2">
             <div>{{ item.status }}</div>
           </div>
         </el-card>
@@ -118,8 +118,8 @@ export default {
         jfqk: ''
       },
       list: [],
-      total:'',
-      rental:''
+      total: '',
+      rental: ''
     }
   },
   created() {
@@ -136,12 +136,12 @@ export default {
         this.total = response.data.data.total
 
         let sum = 0
-        this.list.forEach((item)=>{
-          if(item.status==="入住"){
+        this.list.forEach((item) => {
+          if (item.status === '入住') {
             sum++
           }
         })
-        this.rental = (sum / this.total) * 100+"%"
+        this.rental = (sum / this.total) * 100 + '%'
         this.listLoading = false
       })
     }
@@ -200,7 +200,5 @@ export default {
     padding: 10px;
     color: #fff;
   }
-
-
 
 </style>

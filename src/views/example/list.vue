@@ -266,7 +266,7 @@
 
 <script>
 import {
-  getuser, update, checkout,updateResources
+  getuser, update, checkout, updateResources
 } from '@/api/data'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
@@ -385,16 +385,16 @@ export default {
       }).then(() => {
         checkout({ 'id': rows.id, 'status': '已退房' }).then(res => {
           if (res.data.code === 200) {
-             updateResources({'fh':rows.fh,'status':'闲置'}).then((res)=>{
-                  if (res.data.code === 200) {
-                     this.$message({
-                        type: 'success',
-                        message: '执行成功!'
-                      })
-                    this.getList()
-                    this.dialogFormVisible = false
-                  }
-              })
+            updateResources({ 'fh': rows.fh, 'status': '闲置' }).then((res) => {
+              if (res.data.code === 200) {
+                this.$message({
+                  type: 'success',
+                  message: '执行成功!'
+                })
+                this.getList()
+                this.dialogFormVisible = false
+              }
+            })
           }
         })
       }).catch(() => {

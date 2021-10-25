@@ -24,7 +24,7 @@
           {{ scope.row.xm }}
         </template>
       </el-table-column>
-      <el-table-column label="性别"  align="center">
+      <el-table-column label="性别" align="center">
         <template slot-scope="scope">
           {{ scope.row.xb }}
         </template>
@@ -34,13 +34,13 @@
           {{ scope.row.sfzhm }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="手机号码" >
-         <template slot-scope="scope">
+      <el-table-column align="center" label="手机号码">
+        <template slot-scope="scope">
           {{ scope.row.sjhm }}
         </template>
       </el-table-column>
-       <el-table-column align="center" label="状态" >
-          <template slot-scope="{ row }">
+      <el-table-column align="center" label="状态">
+        <template slot-scope="{ row }">
           <el-tag v-if="row.status === '已退房'" style="color:red">{{ row.status }}</el-tag>
           <el-tag v-if="row.status === '入住'">{{ row.status }}</el-tag>
         </template>
@@ -91,8 +91,8 @@ export default {
     handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['Id', '姓名', '性别', '身份证号码', '手机号码','状态']
-        const filterVal = ['id', 'xm', 'xb', 'sfzhm', 'sjhm','status']
+        const tHeader = ['Id', '姓名', '性别', '身份证号码', '手机号码', '状态']
+        const filterVal = ['id', 'xm', 'xb', 'sfzhm', 'sjhm', 'status']
         const list = this.list
         const data = this.formatJson(filterVal, list)
         excel.export_json_to_excel({
