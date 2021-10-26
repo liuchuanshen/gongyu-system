@@ -1,6 +1,6 @@
 import { logout, getInfo } from '@/api/user'
 import { login } from '@/api/data'
-import { getToken, setToken, removeToken,getAvatar,setAvatar,removeAvatar,getName,setName,removeName } from '@/utils/auth'
+import { getToken, setToken, removeToken, getAvatar, setAvatar, removeAvatar, getName, setName, removeName } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
 const state = {
@@ -8,7 +8,7 @@ const state = {
   name: getName(),
   avatar: getAvatar(),
   introduction: '',
-  roles: [],
+  roles: []
 }
 
 const mutations = {
@@ -39,7 +39,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
         const { data } = response
-        console.log('data',data.data.result.result[0].name)
+        console.log('data', data.data.result.result[0].name)
         commit('SET_TOKEN', data.data.token.token)
         commit('SET_IMG', data.data.img_url)
         commit('SET_NAME', data.data.result.result[0].name)

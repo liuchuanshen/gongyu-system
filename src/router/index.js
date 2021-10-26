@@ -244,8 +244,8 @@ export const asyncRoutes = [
         meta: { title: 'message' }
       }
     ]
-  },
- 
+  }
+
 ]
 
 const createRouter = () =>

@@ -1,15 +1,15 @@
 <template>
-    <div>12312323</div>
+  <div>12312323</div>
 </template>
 
 <script>
 export default {
-    name:'message',
-    data(){
-        return{
+  name: 'Message',
+  data() {
+    return {
 
-        }
     }
+  }
 }
 </script>
 
