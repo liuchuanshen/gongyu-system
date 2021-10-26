@@ -47,31 +47,31 @@
       </el-table-column>
 
       <el-table-column align="center" width="150px" label="处理情况">
-        <!-- <template slot-scope="scope"> -->
-        <span
-          v-if="status === '处理中'"
-          style="color: orange;"
-        >处理中</span>
-        <span
-          v-if="status === '已处理'"
-          style="color: #58bc58;"
-        >已处理</span>
-        <!-- </template> -->
+        <template slot-scope="scope">
+          <span
+            v-if="scope.row.status === '1'"
+            style="color: orange;"
+          >处理中</span>
+          <span
+            v-if="scope.row.status === '2'"
+            style="color: #58bc58;"
+          >已处理</span>
+        </template>
       </el-table-column>
 
       <el-table-column align="center" label="操作" width="200">
         <template slot-scope="scope">
           <el-button
-            v-if="status === '处理中'"
+            v-if="scope.row.status === '1'"
             type="primary"
             size="small"
             icon="el-icon-edit"
-            @click="look()"
+            @click="look(scope.row)"
           >
             查看
           </el-button>
           <el-button
-            v-if="status === '处理中'"
+            v-if="scope.row.status === '1'"
             type="success"
             size="small"
             icon="el-icon-check"
@@ -79,7 +79,7 @@
             @click="sumbit(scope.row)"
           />
           <el-button
-            v-if="status === '已处理'"
+            v-if="scope.row.status === '2'"
             type="success"
             size="small"
             icon="el-icon-check"
@@ -105,7 +105,7 @@
       :before-close="handleClose"
     >
       <div class="lookStatus">
-        <el-steps :space="200" :active="list[0].process.length" finish-status="success">
+        <el-steps :space="200" :active="activedata.length" finish-status="success">
           <el-step title="提交" />
           <el-step title="进行中" />
           <el-step title="已完成" />
@@ -119,65 +119,6 @@
         >确 定</el-button>
       </span>
     </el-dialog>
-
-    <!-- <el-dialog
-      title="处理"
-      :visible.sync="dialogVisible"
-      width="40%"
-      :before-close="handleClose"
-    >
-      <div class="info">
-        <div class="box">
-          <span>房号：</span>
-          <el-input v-model="form.fh" disabled />
-        </div>
-        <div class="box">
-          <span>姓名：</span>
-          <el-input v-model="form.name" disabled />
-        </div>
-        <div class="box">
-          <span>事项：</span>
-          <el-input v-model="form.msg" disabled />
-        </div>
-        <div class="box">
-          <span>反馈时间：</span>
-          <el-input v-model="form.time" disabled />
-        </div>
-        <div class="box">
-          <span>处理情况：</span>
-          <el-input v-model="form.status" disabled />
-        </div>
-        <div class="box">
-          <span>派单意见：</span>
-          <el-select v-model="value1" placeholder="请选择" clearable @change="selectChanged">
-            <el-option
-              v-for="item in options1"
-              :key="item.value"
-              :label="item.label"
-              :value="item.label"
-            />
-          </el-select>
-        </div>
-        <div class="box">
-          <span>派单部门：</span>
-          <el-select v-model="value2" placeholder="请选择" :disabled="choose===false?true:false" clearable @clear="setValueNull">
-            <el-option
-              v-for="item in options2"
-              :key="item.value"
-              :label="item.label"
-              :value="item.label"
-            />
-          </el-select>
-        </div>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button
-          type="primary"
-          @click="sumbit()"
-        >确 定</el-button>
-      </span>
-    </el-dialog> -->
   </div>
 </template>
 
@@ -202,6 +143,7 @@ export default {
   },
   data() {
     return {
+      activedata: [],
       lookStatus: false,
       choose: false,
       form: {},
@@ -253,16 +195,12 @@ export default {
       this.listLoading = true
       getTodolist(this.listQuery).then(res => {
         this.list = res.data.data.result
-        console.log(' this.list', this.list)
-
-        const process = res.data.data.result[0].process
-
-        const new_process = []
-        process.forEach((item) => {
-          new_process.push(JSON.parse(item))
-        })
-
-        this.status = new_process[new_process.length - 1].statusStr
+        // const process = res.data.data.result[0].process
+        // const new_process = []
+        // process.forEach((item) => {
+        //   new_process.push(JSON.parse(item))
+        // })
+        // this.status = new_process[new_process.length - 1].statusStr
 
         // this.total = res.data.total
         this.listLoading = false
@@ -280,7 +218,8 @@ export default {
       this.form = { ...rows }
       this.dialogVisible = true
     },
-    look() {
+    look(row) {
+      this.activedata = row.process
       this.lookStatus = true
     },
     selectChanged(value) {
@@ -314,21 +253,20 @@ export default {
     // },
     sumbit(item) {
       console.log('item', item)
-
       this.$confirm('将该条数据转为已处理, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         const myDate = new Date()
+        item.status = '2'
         item.process.push({
           date: myDate.getFullYear() + '-' + myDate.getMonth() + '-' + myDate.getDate() + '\xa0' + myDate.getHours() + ':' + myDate.getMinutes() + ':' + myDate.getSeconds(),
           id: '3',
           status: '2',
           statusStr: '已处理'
         })
-
-        updateTodolist({ 'id': item.id, 'process': item.process }).then(res => {
+        updateTodolist({ 'id': item.id, 'process': item.process, 'status': item.status }).then(res => {
           if (res.data.code === 200) {
             this.$message({
               type: 'success',

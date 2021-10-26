@@ -214,6 +214,7 @@ export default {
         type: 'warning'
       }).then(() => {
         const myDate = new Date()
+        item.status = '1'
         item.process.push({
           date: myDate.getFullYear() + '-' + myDate.getMonth() + '-' + myDate.getDate() + '\xa0' + myDate.getHours() + ':' + myDate.getMinutes() + ':' + myDate.getSeconds(),
           id: '2',

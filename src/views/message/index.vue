@@ -1,12 +1,12 @@
 <template>
   <el-container
-    
+
     style="height:100%;"
   >
     <el-main style="height:100%;paddingTop:5%">
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <i class="el-icon-chat-line-square" style="margin-right:5px"></i>
+          <i class="el-icon-chat-line-square" style="margin-right:5px" />
           <span>留言箱</span>
         </div>
         <!-- <div
@@ -24,8 +24,8 @@
             房号：
           </el-label>
           <el-input
-            placeholder="请输入房号"
             v-model="form.houseId"
+            placeholder="请输入房号"
             size="medium"
             clearable
             style="width:30%;marginBottom:20px"
@@ -37,8 +37,8 @@
             姓名：
           </el-label>
           <el-input
-            placeholder="请输入姓名"
             v-model="form.name"
+            placeholder="请输入姓名"
             size="medium"
             clearable
             style="width:30%;marginBottom:20px"
@@ -50,23 +50,27 @@
             意见或建议：
           </el-label>
           <el-input
+            v-model="form.msg"
             type="text"
             maxlength="50"
             show-word-limit
             size="medium"
             placeholder="请输入内容"
-            v-model="form.msg"
             style="width:70%;marginBottom:20px"
           />
         </div>
 
         <div class="btn">
-          <el-button type="primary" icon="el-icon-edit-outline" @click="submit"
-            >提交</el-button
-          >
-          <el-button type="warning" icon="el-icon-delete" @click="clear"
-            >清空</el-button
-          >
+          <el-button
+            type="primary"
+            icon="el-icon-edit-outline"
+            @click="submit"
+          >提交</el-button>
+          <el-button
+            type="warning"
+            icon="el-icon-delete"
+            @click="clear"
+          >清空</el-button>
         </div>
       </el-card>
     </el-main>
@@ -80,33 +84,56 @@ export default {
   data() {
     return {
       isFullscreen: false,
-      form:{
-        houseId:'',
-        name:'',
-        msg:''
+      form: {
+        houseId: '',
+        name: '',
+        msg: ''
       }
-    };
+    }
   },
   mounted() {
     this.init()
   },
   methods: {
-    submit(){
-      setMessage().then((res)=>{
-        if(res.data.code===200){
+    submit() {
+      // id, date, houseId, msg, name, process
+
+      const new_id = Math.floor(Math.random() * 1000).toString()
+
+      const myDate = new Date()
+      const now_date = myDate.getFullYear() + '-' + myDate.getMonth() + '-' + myDate.getDate() + '\xa0' + myDate.getHours() + ':' + myDate.getMinutes() + ':' + myDate.getSeconds()
+      const data = { ...this.form }
+      data.date = now_date
+      data.id = new_id
+      data.status = '0'
+      data.process = [
+        {
+          id: new_id,
+          status: '0',
+          statusStr: '待处理',
+          date: now_date
+        }
+      ]
+      setMessage(data).then((res) => {
+        if (res.data.code === 200) {
           this.$message.success('提交成功')
+          this.form = {
+            houseId: '',
+            name: '',
+            msg: ''
+          }
         }
       })
     },
-    clear(){
-      this.form={
-        houseId:'',
-        name:'',
-        msg:''
+    clear() {
+      this.form = {
+        houseId: '',
+        name: '',
+        msg: ''
       }
     }
   }
-};
+}
 </script>
 
 <style>
