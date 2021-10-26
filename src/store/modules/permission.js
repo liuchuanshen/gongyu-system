@@ -30,10 +30,16 @@ export function filterAsyncRoutes(routes, roles) {
       res.push(tmp)
     }
   })
+
+
+  console.log('res',res)
+
   if (roles[0] === 'editor') {
     res.forEach((item) => {
       if (item.path != '/message') {
         item.hidden = true
+      }else{
+        item.hidden =false
       }
     })
   }

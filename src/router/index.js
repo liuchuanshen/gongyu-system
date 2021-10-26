@@ -224,11 +224,11 @@ export const asyncRoutes = [
       }
     ]
   },
-  {
-    path: "/message",
-    name: "message",
-    component: () => import("@/views/message")
-  },
+  // {
+  //   path: "/message",
+  //   name: "message",
+  //   component: () => import("@/views/message")
+  // },
   chartsRouter,
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true },
@@ -245,11 +245,12 @@ export const asyncRoutes = [
       {
         path: '/message',
         component: () => import('@/views/message'),
-        name: 'message',
-        meta: { title: 'message' }
+        name: '留言箱',
+        meta: { title: '留言箱' }
       }
     ]
   }
+  
 
 ]
 

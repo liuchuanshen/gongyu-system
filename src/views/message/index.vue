@@ -73,13 +73,19 @@
 </template>
 
 <script>
+import screenfull from 'screenfull'
+
 export default {
   data() {
     return {
+      isFullscreen: false,
       roomNum: "",
       name: "",
       message: ""
     };
+  },
+  mounted() {
+    this.init()
   },
   methods: {
     submit: function() {},
@@ -87,7 +93,13 @@ export default {
       this.roomNum = "";
       this.name = "";
       this.message = "";
-    }
+    },
+    init() {
+      screenfull.on('change', this.change)
+    },
+    change() {
+      this.isFullscreen = screenfull.isFullscreen
+    },
   }
 };
 </script>
