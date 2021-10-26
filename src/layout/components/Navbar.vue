@@ -3,7 +3,7 @@
     <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
 
     <span class="name">
-      欢迎回来，{{name}}
+      欢迎回来，{{ name }}
     </span>
 
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
@@ -59,12 +59,6 @@ import SizeSelect from '@/components/SizeSelect'
 // import Search from '@/components/HeaderSearch'
 
 export default {
-  data(){
-    return{
-      avatar:'',
-      name:''
-    }
-  },
   components: {
     Breadcrumb,
     Hamburger,
@@ -73,7 +67,13 @@ export default {
     SizeSelect
     // Search
   },
-  mounted(){
+  data() {
+    return {
+      avatar: '',
+      name: ''
+    }
+  },
+  mounted() {
     this.avatar = this.$store.getters.avatar
     this.name = this.$store.getters.name
   },

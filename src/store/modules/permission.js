@@ -19,8 +19,7 @@ function hasPermission(roles, route) {
  * @param roles
  */
 export function filterAsyncRoutes(routes, roles) {
-
-  let res = []
+  const res = []
 
   routes.forEach(route => {
     const tmp = { ...route }
@@ -31,10 +30,10 @@ export function filterAsyncRoutes(routes, roles) {
       res.push(tmp)
     }
   })
-  if(roles[0]==="editor"){
-    res.forEach((item)=>{
-      if(item.path!="/message"){
-        item.hidden=true
+  if (roles[0] === 'editor') {
+    res.forEach((item) => {
+      if (item.path != '/message') {
+        item.hidden = true
       }
     })
   }
@@ -64,10 +63,9 @@ const actions = {
         accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
       }
 
-
       // if (roles.includes("editor")) {
       //   accessedRoutes = accessedRoutes[6]
-      // } 
+      // }
 
       // console.log('accessedRoutes',accessedRoutes)
 
