@@ -224,6 +224,11 @@ export const asyncRoutes = [
       }
     ]
   },
+  {
+    path: "/message",
+    name: "message",
+    component: () => import("@/views/message")
+  },
   chartsRouter,
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true },
