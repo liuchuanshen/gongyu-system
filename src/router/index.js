@@ -238,11 +238,21 @@ export const asyncRoutes = [
     redirect: "/message",
     name: "box",
     meta: {
-      title: "留言箱",
-      icon: "el-icon-message"
-    }
+      title: '留言箱',
+      icon: 'el-icon-location'
+    },
+    children: [
+      {
+        path: '/message',
+        component: () => import('@/views/message'),
+        name: '留言箱',
+        meta: { title: '留言箱' }
+      }
+    ]
   }
-];
+  
+
+]
 
 const createRouter = () =>
   new Router({

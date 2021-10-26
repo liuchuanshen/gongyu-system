@@ -1,7 +1,7 @@
 <template>
   <el-container
     
-    style="backgroundColor:#304156;height:100%;"
+    style="height:100%;"
   >
     <el-main style="height:100%;paddingTop:5%">
       <el-card class="box-card">
@@ -9,15 +9,15 @@
           <i class="el-icon-chat-line-square" style="margin-right:5px"></i>
           <span>留言箱</span>
         </div>
-        <div
+        <!-- <div
           style="width:100%;height:150px;overflow:auto;border:1px solid #ccc;paddingRight:20px"
         >
           <li v-for="o in 10" :key="o" class="text item">
             {{ "列表内容 " + o }}
           </li>
-        </div>
+        </div> -->
 
-        <hr style="margin:20px 20px" />
+        <!-- <hr style="margin:20px 20px" /> -->
 
         <div>
           <el-label style="marginRight:50px">
@@ -82,25 +82,28 @@ export default {
       isFullscreen: false,
       roomNum: "",
       name: "",
-      message: ""
+      message: "",
+      form:{
+        roomNum:'',
+        name:'',
+        message:''
+      }
     };
   },
   mounted() {
     this.init()
   },
   methods: {
-    submit: function() {},
-    clear: function() {
-      this.roomNum = "";
-      this.name = "";
-      this.message = "";
+    submit(){
+
     },
-    init() {
-      screenfull.on('change', this.change)
-    },
-    change() {
-      this.isFullscreen = screenfull.isFullscreen
-    },
+    clear(){
+      this.form={
+        roomNum:'',
+        name:'',
+        message:''
+      }
+    }
   }
 };
 </script>
@@ -124,8 +127,8 @@ export default {
 }
 
 .box-card {
-  width: 60%;
-  height: 520px;
+  width: 30%;
+  height: 350px;
   margin: auto auto;
   border-radius: 20px;
 }
