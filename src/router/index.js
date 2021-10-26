@@ -112,6 +112,7 @@ export const asyncRoutes = [
   //     ]
   //   },
   {
+    // hidden:false,
     path: '/list',
     name: 'list',
     component: Layout,
@@ -131,7 +132,7 @@ export const asyncRoutes = [
       },
       {
         path: 'houseManage',
-        name: 'create',
+        name: 'create1',
         component: () => import('@/views/table/houseManage'),
         meta: { title: '房源管理', icon: 'el-icon-s-custom' }
       },
@@ -209,14 +210,14 @@ export const asyncRoutes = [
     path: '/map',
     component: Layout,
     redirect: '/map',
-    name: 'Excel',
+    name: 'map',
     meta: {
       title: '公寓情况',
       icon: 'el-icon-location'
     },
     children: [
       {
-        path: '/map',
+        path: '/map/detail',
         component: () => import('@/views/map'),
         name: 'house',
         meta: { title: '公寓情况' }
@@ -225,7 +226,26 @@ export const asyncRoutes = [
   },
   chartsRouter,
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  { path: '*', redirect: '/404', hidden: true },
+  {
+    path: '/message',
+    component: Layout,
+    redirect: '/message',
+    name: 'box',
+    meta: {
+      title: '留言箱',
+      icon: 'el-icon-location'
+    },
+    children: [
+      {
+        path: '/message',
+        component: () => import('@/views/message'),
+        name: 'message',
+        meta: { title: 'message' }
+      }
+    ]
+  },
+ 
 ]
 
 const createRouter = () =>
