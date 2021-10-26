@@ -1,6 +1,7 @@
 <template>
   <el-container
-    style="background-image: linear-gradient(to bottom right, #409eff, #DCDFE6);;height:100%;"
+    
+    style="backgroundColor:#304156;height:100%;"
   >
     <el-main style="height:100%;paddingTop:5%">
       <el-card class="box-card">
