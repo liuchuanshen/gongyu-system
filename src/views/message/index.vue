@@ -25,7 +25,7 @@
           </el-label>
           <el-input
             placeholder="请输入房号"
-            v-model="roomNum"
+            v-model="form.houseId"
             size="medium"
             clearable
             style="width:30%;marginBottom:20px"
@@ -38,7 +38,7 @@
           </el-label>
           <el-input
             placeholder="请输入姓名"
-            v-model="name"
+            v-model="form.name"
             size="medium"
             clearable
             style="width:30%;marginBottom:20px"
@@ -55,7 +55,7 @@
             show-word-limit
             size="medium"
             placeholder="请输入内容"
-            v-model="message"
+            v-model="form.msg"
             style="width:70%;marginBottom:20px"
           />
         </div>
@@ -74,19 +74,16 @@
 </template>
 
 <script>
-import screenfull from 'screenfull'
+import { setMessage } from '@/api/data'
 
 export default {
   data() {
     return {
       isFullscreen: false,
-      roomNum: "",
-      name: "",
-      message: "",
       form:{
-        roomNum:'',
+        houseId:'',
         name:'',
-        message:''
+        msg:''
       }
     };
   },
@@ -95,13 +92,17 @@ export default {
   },
   methods: {
     submit(){
-
+      setMessage().then((res)=>{
+        if(res.data.code===200){
+          this.$message.success('提交成功')
+        }
+      })
     },
     clear(){
       this.form={
-        roomNum:'',
+        houseId:'',
         name:'',
-        message:''
+        msg:''
       }
     }
   }

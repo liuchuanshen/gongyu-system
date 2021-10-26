@@ -236,4 +236,19 @@ router.get('/updateResources', async(req, res) => {
   }
 })
 
+
+// 租户端
+// api/houselist/setMessage
+// 新建留言箱数据
+router.get('/setMessage', async(req, res) => {
+  const { id, date, houseId, msg, name, process } = req.query
+  try {
+    await mongo.create(colNameMessagebox, { id, date, houseId, msg, name, process })
+    res.send(formatData())
+  } catch (err) {
+    res.send(formatData({ code: 400 }))
+  }
+})
+
+
 module.exports = router

@@ -67,3 +67,7 @@ export function resources(data) {
 export function updateResources(data) {
   return http.get('/houselist/updateResources', data)
 }
+
+export function setMessage(data) {
+  return http.get('/houselist/setMessage', data)
+}
