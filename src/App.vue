@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: "App",
+  name: 'App',
   mounted() {
     window.L2Dwidget.init({
       pluginRootPath: "live2dw/",

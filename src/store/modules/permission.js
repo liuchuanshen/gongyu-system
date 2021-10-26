@@ -19,7 +19,8 @@ function hasPermission(roles, route) {
  * @param roles
  */
 export function filterAsyncRoutes(routes, roles) {
-  const res = []
+
+  let res = []
 
   routes.forEach(route => {
     const tmp = { ...route }
@@ -30,6 +31,13 @@ export function filterAsyncRoutes(routes, roles) {
       res.push(tmp)
     }
   })
+  if(roles[0]==="editor"){
+    res.forEach((item)=>{
+      if(item.path!="/message"){
+        item.hidden=true
+      }
+    })
+  }
 
   return res
 }
@@ -55,6 +63,14 @@ const actions = {
       } else {
         accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
       }
+
+
+      // if (roles.includes("editor")) {
+      //   accessedRoutes = accessedRoutes[6]
+      // } 
+
+      // console.log('accessedRoutes',accessedRoutes)
+
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)
     })

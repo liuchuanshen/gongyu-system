@@ -18,64 +18,82 @@
       highlight-current-row
       style="width: 100%; overflow-y:hidden;"
     >
-      <el-table-column align="center" label="序号" width="80">
+      <!-- <el-table-column align="center" label="序号" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <el-table-column
         align="center"
         class-name="status-col"
-        label="房号"
+        label="涉及房号"
         width="110"
       >
         <template slot-scope="{ row }">
           <el-tag :type="row.status | statusFilter">
-            {{ row.fh }}
+            {{ row.houseId }}
           </el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="姓名">
+      <el-table-column align="center" label="门禁密码">
         <template slot-scope="scope">
-          <span>{{ scope.row.xm }}</span>
+          <span>{{ scope.row.doorPsw }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="入住时间">
+      <el-table-column align="center" label="门禁密码有效时间">
         <template slot-scope="scope">
-          <span>{{ scope.row.rzsj }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" label="租约时间">
-        <template slot-scope="scope">
-          <span>{{ scope.row.zysj }}</span>
+          <span>{{ scope.row.doorPswTime }}分钟</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="房间密码">
         <template slot-scope="scope">
-          <!-- <svg-icon v-for="n in +scope.row.importance" :key="n" icon-class="star" class="meta-item__icon" /> -->
-          <span>{{ scope.row.csmm }}</span>
+          <span>{{ scope.row.housePsw }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" class-name="status-col" label="手机号码">
+      <el-table-column align="center" label="房间密码有效时间">
         <template slot-scope="scope">
-          <!-- <el-tag :type="row.status | statusFilter"> -->
-          <span>{{ scope.row.sjhm }}</span>
-          <!-- </el-tag> -->
+          <span>{{ scope.row.housePswTime }}分钟</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="操作" width="200">
+      <el-table-column align="center" label="状态">
         <template slot-scope="scope">
+          <span v-if="scope.row.status === '0'" style="color:red">禁用</span>
+          <span v-if="scope.row.status === '1'" style="color:#58bc58">启用</span>
+          <span v-if="scope.row.status === '2'">到期</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="操作" width="500">
+        <template slot-scope="scope">
+          <el-button
+            type="danger"
+            size="mini"
+            icon="el-icon-refresh"
+            :disabled="scope.row.status === '1' ? false:true"
+            @click="disable(scope.row)"
+          >
+            禁用
+          </el-button>
+          <el-button
+            type="success"
+            size="mini"
+            icon="el-icon-check"
+            :disabled="scope.row.status === '0' ? false:true"
+            @click="enable(scope.row)"
+          >
+            启用
+          </el-button>
           <el-button
             type="warning"
             size="mini"
             icon="el-icon-refresh"
+            :disabled="scope.row.status === '1' ? false:true"
             @click="resetPass(scope.row)"
           >
             重置密码
@@ -84,13 +102,14 @@
             type="primary"
             size="mini"
             icon="el-icon-edit-outline"
-            style="marginLeft:0px;marginTop:10px"
+            :disabled="scope.row.status === '1' ? false:true"
             @click="editPass(scope.row)"
           >
             修改密码
           </el-button>
         </template>
       </el-table-column>
+
     </el-table>
     <pagination
       v-show="total > 0"
@@ -103,7 +122,7 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/article'
+import { temporaryList, tempupdate } from '@/api/data'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
@@ -121,6 +140,8 @@ export default {
   },
   data() {
     return {
+      disable_status: false,
+      enable_status: false,
       dialogVisible: false,
       list: null,
       total: 0,
@@ -138,27 +159,31 @@ export default {
     }, 2000)
   },
   methods: {
-    resetPass(row) {
+    resetPass(rows) {
       this.$confirm('此操作将重置为默认密码, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(() => {
-          this.$message({
-            type: 'success',
-            message: '重置成功'
+          const data = { ...rows }
+          data.doorPsw = '123456'
+          data.housePsw = '123456'
+          data.status = '1'
+          tempupdate(data).then(res => {
+            if (res.data.code === 200) {
+              this.getList()
+              this.$message({
+                type: 'success',
+                message: '重置成功'
+              })
+            }
           })
-          row.csmm = '123456'
         })
         .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '取消重置'
-          })
         })
     },
-    editPass(row) {
+    editPass(rows) {
       this.$prompt('请输入需要修改的 6 位纯数字密码', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -166,24 +191,28 @@ export default {
         inputErrorMessage: '密码格式错误'
       })
         .then(({ value }) => {
-          this.$message({
-            type: 'success',
-            message: '密码已更改为 :' + value
+          const data = { ...rows }
+          data.doorPsw = value
+          data.housePsw = value
+          data.status = '1'
+          tempupdate(data).then(res => {
+            if (res.data.code === 200) {
+              this.getList()
+              this.$message({
+                type: 'success',
+                message: '密码已更改为 :' + value
+              })
+            }
           })
-          row.csmm = value
         })
         .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '取消更改'
-          })
         })
     },
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
+      temporaryList().then(res => {
+        this.list = res.data.data.result
+        this.total = res.data.data.total
         this.listLoading = false
       })
     },
@@ -197,6 +226,48 @@ export default {
     write(rows) {
       this.rows = rows
       this.dialogVisible = true
+    },
+    disable(rows) {
+      this.$confirm('此操作将禁用门禁密码, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.listLoading = true
+        const data = { ...rows }
+        data.status = '0'
+        tempupdate(data).then(res => {
+          if (res.data.code === 200) {
+            this.getList()
+            this.$message({
+              type: 'success',
+              message: '禁用成功!'
+            })
+          }
+        })
+      }).catch(() => {
+      })
+    },
+    enable(rows) {
+      this.$confirm('此操作将启用门禁密码, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.listLoading = true
+        const data = { ...rows }
+        data.status = '1'
+        tempupdate(data).then(res => {
+          if (res.data.code === 200) {
+            this.getList()
+            this.$message({
+              type: 'success',
+              message: '启用成功!'
+            })
+          }
+        })
+      }).catch(() => {
+      })
     }
   }
 }

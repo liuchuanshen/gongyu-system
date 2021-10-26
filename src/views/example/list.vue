@@ -1,5 +1,24 @@
 <template>
   <div class="app-container">
+
+    <div class="filter-container">
+      <el-input
+        v-model="listQuery.name"
+        placeholder="请输入租客姓名"
+        style="width: 200px;margin-right: 20px;"
+        class="filter-item"
+        @keyup.enter.native="handleFilter"
+      />
+      <el-button
+        class="filter-item"
+        type="primary"
+        icon="el-icon-search"
+        @click="handleFilter"
+      >
+        搜索
+      </el-button>
+    </div>
+
     <el-table
       v-skeleton="{ loading: this.listLoading, rows: 10 }"
       v-loading="listLoading"
@@ -8,6 +27,7 @@
       fit
       highlight-current-row
       style="width: 100%;"
+      @sort-change="sortChange"
     >
       <el-table-column align="center" label="序号" width="80">
         <template slot-scope="scope">
@@ -31,6 +51,12 @@
       <el-table-column width="120px" align="center" label="姓名">
         <template slot-scope="scope">
           <span>{{ scope.row.xm }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column width="120px" align="center" label="性别">
+        <template slot-scope="scope">
+          <span>{{ scope.row.xb }}</span>
         </template>
       </el-table-column>
 
@@ -87,25 +113,40 @@
         </template>
       </el-table-column>
 
+      <el-table-column label="状态" class-name="status-col">
+        <template slot-scope="{ row }">
+          <el-tag v-if="row.status === '入住'" type="success">{{ row.status }}</el-tag>
+          <el-tag v-if="row.status === '已退房'" type="danger">{{ row.status }}</el-tag>
+        </template>
+      </el-table-column>
+
       <el-table-column align="center" label="操作" width="210" fixed="right">
-        <template slot-scope="scope">
+        <template slot-scope="{ row }">
           <el-button
-            v-if="scope.row.jfqk === 'y'"
             type="primary"
             size="small"
             icon="el-icon-edit"
-            @click="write(scope.row)"
+            :disabled="row.status === '入住'?false:true"
+            @click="write(row)"
           >
             编辑
           </el-button>
-          <el-button
-            v-if="scope.row.jfqk === 'n'"
+          <!-- <el-button
             type="danger"
             size="small"
             icon="el-icon-warning-outline"
             @click="write(scope.row)"
           >
             查看
+          </el-button> -->
+          <el-button
+            type="danger"
+            size="small"
+            icon="el-icon-warning-outline"
+            :disabled="row.status === '入住'?false:true"
+            @click="checkoutUser(row)"
+          >
+            退房
           </el-button>
         </template>
       </el-table-column>
@@ -216,7 +257,7 @@
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button
           type="primary"
-          @click="dialogVisible = false"
+          @click="sumbit(rows)"
         >确 定</el-button>
       </span>
     </el-dialog>
@@ -224,7 +265,9 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/article'
+import {
+  getuser, update, checkout, updateResources
+} from '@/api/data'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
@@ -255,23 +298,23 @@ export default {
         {
           value: '单间',
           label: '单间'
-        },
-        {
-          value: '一房一厅',
-          label: '一房一厅'
-        },
-        {
-          value: '两房一厅',
-          label: '两房一厅'
-        },
-        {
-          value: '三房一厅',
-          label: '三房一厅'
-        },
-        {
-          value: '三房两厅',
-          label: '三房两厅'
         }
+        // {
+        //   value: '一房一厅',
+        //   label: '一房一厅'
+        // },
+        // {
+        //   value: '两房一厅',
+        //   label: '两房一厅'
+        // },
+        // {
+        //   value: '三房一厅',
+        //   label: '三房一厅'
+        // },
+        // {
+        //   value: '三房两厅',
+        //   label: '三房两厅'
+        // }
       ],
       value: ''
     }
@@ -283,11 +326,16 @@ export default {
     }, 2000)
   },
   methods: {
-    getList() {
+    getList(name) {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
+      if (name === '' || name === undefined) {
+        name = {}
+      } else {
+        name = { 'name': name }
+      }
+      getuser(name).then(response => {
+        this.list = response.data.data.result
+        this.total = response.data.data.total
         this.listLoading = false
       })
     },
@@ -301,6 +349,56 @@ export default {
     write(rows) {
       this.rows = rows
       this.dialogVisible = true
+    },
+    handleFilter() {
+      this.getList(this.listQuery.name)
+    },
+    sortChange(data) {
+      const { prop, order } = data
+      if (prop === 'id') {
+        this.sortByID(order)
+      }
+    },
+    sortByID(order) {
+      if (order === 'ascending') {
+        this.listQuery.sort = '+id'
+      } else {
+        this.listQuery.sort = '-id'
+      }
+      this.handleFilter()
+    },
+    sumbit(rows) {
+      update(rows).then(res => {
+        console.log('res', res)
+        if (res.data.code === 200) {
+          this.$message.success('修改信息成功')
+          this.dialogVisible = false
+          this.getList()
+        }
+      })
+    },
+    checkoutUser(rows) {
+      this.$confirm('此操作将改变状态且不可逆, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        checkout({ 'id': rows.id, 'status': '已退房' }).then(res => {
+          if (res.data.code === 200) {
+            updateResources({ 'fh': rows.fh, 'status': '闲置' }).then((res) => {
+              if (res.data.code === 200) {
+                this.$message({
+                  type: 'success',
+                  message: '执行成功!'
+                })
+                this.getList()
+                this.dialogFormVisible = false
+              }
+            })
+          }
+        })
+      }).catch(() => {
+      })
     }
   }
 }

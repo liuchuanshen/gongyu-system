@@ -2,6 +2,10 @@
   <div class="navbar">
     <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
 
+    <span class="name">
+      欢迎回来，{{name}}
+    </span>
+
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
 
     <div class="right-menu">
@@ -20,7 +24,7 @@
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <img src="https://img2.baidu.com/it/u=1155743917,3051821294&fm=26&fmt=auto" class="user-avatar">
+          <img :src="avatar" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -55,6 +59,12 @@ import SizeSelect from '@/components/SizeSelect'
 // import Search from '@/components/HeaderSearch'
 
 export default {
+  data(){
+    return{
+      avatar:'',
+      name:''
+    }
+  },
   components: {
     Breadcrumb,
     Hamburger,
@@ -62,6 +72,10 @@ export default {
     Screenfull,
     SizeSelect
     // Search
+  },
+  mounted(){
+    this.avatar = this.$store.getters.avatar
+    this.name = this.$store.getters.name
   },
   computed: {
     ...mapGetters([
@@ -164,5 +178,10 @@ export default {
       }
     }
   }
+}
+
+.name{
+  position: absolute;
+  top: 25%;
 }
 </style>

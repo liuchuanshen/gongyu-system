@@ -23,7 +23,7 @@
       >
         <template slot-scope="{ row }">
           <el-tag :type="row.status | statusFilter">
-            {{ row.fh }}
+            {{ row.houseId }}
           </el-tag>
         </template>
       </el-table-column>
@@ -42,56 +42,86 @@
 
       <el-table-column width="180px" align="center" label="反馈时间">
         <template slot-scope="scope">
-          <span>{{ scope.row.time }}</span>
+          <span>{{ scope.row.date }}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" width="150px" label="处理情况">
-        <template slot-scope="scope">
-          <span
-            v-if="scope.row.status === 'wcl'"
-            style="color: #58bc58;"
-          >未处理</span>
-          <span
-            v-if="scope.row.status === 'clz'"
-            style="color: red;"
-          >处理中</span>
-        </template>
+        <!-- <template slot-scope="scope"> -->
+        <span
+          v-if="status === '处理中'"
+          style="color: orange;"
+        >处理中</span>
+        <span
+          v-if="status === '已处理'"
+          style="color: #58bc58;"
+        >已处理</span>
+        <!-- </template> -->
       </el-table-column>
 
       <el-table-column align="center" label="操作" width="200">
         <template slot-scope="scope">
           <el-button
-            v-if="scope.row.status === 'wcl'"
+            v-if="status === '处理中'"
             type="primary"
             size="small"
             icon="el-icon-edit"
-            @click="write(scope.row)"
-          >
-            派单
-          </el-button>
-          <!-- <el-button
-            v-if="scope.row.jfqk === 'n'"
-            type="danger"
-            size="small"
-            icon="el-icon-warning-outline"
-            @click="write(scope.row)"
+            @click="look()"
           >
             查看
-          </el-button> -->
+          </el-button>
+          <el-button
+            v-if="status === '处理中'"
+            type="success"
+            size="small"
+            icon="el-icon-check"
+            circle
+            @click="sumbit(scope.row)"
+          />
+          <el-button
+            v-if="status === '已处理'"
+            type="success"
+            size="small"
+            icon="el-icon-check"
+            @click="look()"
+          >
+            查看
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
-    <pagination
+    <!-- <pagination
       v-show="total > 0"
       :total="total"
       :page.sync="listQuery.page"
       :limit.sync="listQuery.limit"
       @pagination="getList"
-    />
+    /> -->
 
     <el-dialog
-      title="派单申请"
+      title="处理情况"
+      :visible.sync="lookStatus"
+      width="40%"
+      :before-close="handleClose"
+    >
+      <div class="lookStatus">
+        <el-steps :space="200" :active="list[0].process.length" finish-status="success">
+          <el-step title="提交" />
+          <el-step title="进行中" />
+          <el-step title="已完成" />
+        </el-steps>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="lookStatus = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="lookStatus = false"
+        >确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <!-- <el-dialog
+      title="处理"
       :visible.sync="dialogVisible"
       width="40%"
       :before-close="handleClose"
@@ -147,15 +177,15 @@
           @click="sumbit()"
         >确 定</el-button>
       </span>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
 <script>
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import {
-  fetchSuccessMsg
-} from '@/api/article'
+  getTodolist, updateTodolist
+} from '@/api/data'
 
 export default {
   name: 'ArticleList',
@@ -172,6 +202,7 @@ export default {
   },
   data() {
     return {
+      lookStatus: false,
       choose: false,
       form: {},
       dialogVisible: false,
@@ -207,7 +238,8 @@ export default {
         value: '5',
         label: 'IT部'
       }],
-      value2: ''
+      value2: '',
+      status: ''
     }
   },
   created() {
@@ -219,11 +251,20 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      fetchSuccessMsg(this.listQuery).then(response => {
-        // console.log(' response', response)
-        this.list = response.data.items
-        this.temp.id = this.list.length + 1
-        this.total = response.data.total
+      getTodolist(this.listQuery).then(res => {
+        this.list = res.data.data.result
+        console.log(' this.list', this.list)
+
+        const process = res.data.data.result[0].process
+
+        const new_process = []
+        process.forEach((item) => {
+          new_process.push(JSON.parse(item))
+        })
+
+        this.status = new_process[new_process.length - 1].statusStr
+
+        // this.total = res.data.total
         this.listLoading = false
       })
       this.listLoading = false
@@ -239,6 +280,9 @@ export default {
       this.form = { ...rows }
       this.dialogVisible = true
     },
+    look() {
+      this.lookStatus = true
+    },
     selectChanged(value) {
       this.value1 = value
       this.choose = true
@@ -246,27 +290,55 @@ export default {
     setValueNull(val) {
       this.choose = false
     },
-    sumbit() {
-      if (this.value1 === '') {
-        this.$message.error('请补全派单意见')
-        return false
-      } else if (this.value2 === '') {
-        this.$message.error('请补全派单部门')
-        return false
-      } else {
-        const successData = JSON.parse(localStorage.getItem('todolist-success'))
-        successData.forEach((item) => {
-          if (item.id === this.form.id) {
-            item.status = 'clz'
-            item.pdyj = this.value1
-            item.pdbm = this.value2
-            localStorage.setItem('todolist-success', JSON.stringify(successData))
+    // sumbit() {
+    //   if (this.value1 === '') {
+    //     this.$message.error('请补全派单意见')
+    //     return false
+    //   } else if (this.value2 === '') {
+    //     this.$message.error('请补全派单部门')
+    //     return false
+    //   } else {
+    //     const successData = JSON.parse(localStorage.getItem('todolist-success'))
+    //     successData.forEach((item) => {
+    //       if (item.id === this.form.id) {
+    //         item.status = 'clz'
+    //         item.pdyj = this.value1
+    //         item.pdbm = this.value2
+    //         localStorage.setItem('todolist-success', JSON.stringify(successData))
+    //       }
+    //     })
+    //     this.$message.success('派单成功')
+    //     this.dialogVisible = false
+    //     this.getList()
+    //   }
+    // },
+    sumbit(item) {
+      console.log('item', item)
+
+      this.$confirm('将该条数据转为已处理, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        const myDate = new Date()
+        item.process.push({
+          date: myDate.getFullYear() + '-' + myDate.getMonth() + '-' + myDate.getDate() + '\xa0' + myDate.getHours() + ':' + myDate.getMinutes() + ':' + myDate.getSeconds(),
+          id: '3',
+          status: '2',
+          statusStr: '已处理'
+        })
+
+        updateTodolist({ 'id': item.id, 'process': item.process }).then(res => {
+          if (res.data.code === 200) {
+            this.$message({
+              type: 'success',
+              message: '处理成功！'
+            })
+            this.getList()
           }
         })
-        this.$message.success('派单成功')
-        this.dialogVisible = false
-        this.getList()
-      }
+      }).catch(() => {
+      })
     }
   }
 }
@@ -298,5 +370,9 @@ export default {
       width: 200px;
     }
   }
+}
+.lookStatus{
+  /* display: flex; */
+
 }
 </style>

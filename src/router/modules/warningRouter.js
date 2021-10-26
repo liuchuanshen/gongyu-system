@@ -32,12 +32,12 @@ const warningRouter = {
     //   name: 'LineChart',
     //   meta: { title: 'Line Chart', noCache: true }
     // },
-    {
-      path: 'warning',
-      component: () => import('@/views/warning/index'),
-      name: 'warning',
-      meta: { title: '预警警报', icon: 'el-icon-warning', noCache: true }
-    }
+    // {
+    //   path: 'warning',
+    //   component: () => import('@/views/warning/index'),
+    //   name: 'warning',
+    //   meta: { title: '预警警报', icon: 'el-icon-warning', noCache: true }
+    // }
   ]
 }
 

@@ -10,7 +10,7 @@
             <div class="card-panel-text">
               当前租户
             </div>
-            <count-to :start-val="0" :end-val="123" :duration="2600" class="card-panel-num" />
+            <count-to :start-val="0" :end-val="userNumber" :duration="2600" class="card-panel-num" />
           </div>
         </div>
       </el-col>
@@ -28,28 +28,20 @@
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel" @click="handleSetLineChartData('purchases')">
-          <div class="card-panel-icon-wrapper icon-money">
-            <svg-icon icon-class="money" class-name="card-panel-icon" />
-          </div>
-          <div class="card-panel-description">
+        <div class="card-panel" @click="handleSetLineChartData('watch')">
+          <div class="card-panel-description-other">
             <div class="card-panel-text">
-              已收费用
+              出租率{{ rental_czl }}
             </div>
-            <count-to :start-val="0" :end-val="123" :duration="3200" class="card-panel-num" />
           </div>
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel" @click="handleSetLineChartData('purchases')">
-          <div class="card-panel-icon-wrapper icon-money">
-            <svg-icon icon-class="money" class-name="card-panel-icon" />
-          </div>
-          <div class="card-panel-description">
+        <div class="card-panel" @click="handleSetLineChartData('watch')">
+          <div class="card-panel-description-other">
             <div class="card-panel-text">
-              未收费用
+              空置率{{ rental_kzl }}
             </div>
-            <count-to :start-val="0" :end-val="123" :duration="3200" class="card-panel-num" />
           </div>
         </div>
       </el-col>
@@ -81,15 +73,16 @@
         </el-collapse-item>
       </el-collapse>
     </el-drawer>
+
     <el-dialog title="租客看房" :visible.sync="watch">
       <el-form :model="form">
         <el-form-item label="门禁密码" :label-width="formLabelWidth">
-          <el-input v-model="form.doorpassword" autocomplete="off" style="width:200px" />
+          <el-input v-model="form.doorPsw" autocomplete="off" style="width:200px" />
         </el-form-item>
         <el-form-item label="门禁密码有效时间" :label-width="formLabelWidth">
           <div class="block">
             <el-slider
-              v-model="time"
+              v-model="form.doorPswTime"
               show-input
             />
           </div>
@@ -105,12 +98,12 @@
           </el-select>
         </el-form-item>
         <el-form-item label="房间密码" :label-width="formLabelWidth">
-          <el-input v-model="form.password" autocomplete="off" style="width:200px" />
+          <el-input v-model="form.housePsw" autocomplete="off" style="width:200px" />
         </el-form-item>
         <el-form-item label="密码有效时间" :label-width="formLabelWidth">
           <div class="block">
             <el-slider
-              v-model="time"
+              v-model="form.housePswTime"
               show-input
             />
           </div>
@@ -118,7 +111,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="watch = false">取 消</el-button>
-        <el-button type="primary" @click="watch = false">确 定</el-button>
+        <el-button type="primary" @click="sumbit()">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -128,8 +121,8 @@
 
 <script>
 import CountTo from 'vue-count-to'
-import { fetchSuccessMsg } from '@/api/article'
-import { getlist } from '@/api/data'
+// import { fetchSuccessMsg } from '@/api/article'
+import { getlist, getuser, temporary, deleteMessage, createTodolist, resources } from '@/api/data'
 
 export default {
   components: {
@@ -140,50 +133,78 @@ export default {
       time: '',
       formLabelWidth: '150px',
       form: {
+        doorPsw: '',
+        doorPswTime: null,
         houseId: '',
-        password: '',
-        doorpassword: ''
+        housePsw: '',
+        housePswTime: null,
+        status: '1'
       },
       options: [{
-        value: '1',
+        value: '101',
         label: '101'
       }, {
-        value: '2',
+        value: '102',
         label: '102'
       }, {
-        value: '3',
+        value: '103',
         label: '103'
       }, {
-        value: '4',
+        value: '104',
         label: '104'
       }, {
-        value: '5',
+        value: '105',
         label: '105'
       }],
       activeName: '1',
       drawer: null,
       watch: null,
       todolist: [],
-      MessageBox: null
+      MessageBox: null,
+      userNumber: null,
+      rental_czl: '',
+      rental_kzl: ''
     }
+  },
+  created() {
+    this.UserList()
   },
   mounted() {
     this.$bus.$on('MessageBox', (data) => {
-      this.MessageBox = data.list.length
-      this.todolist = data.list
+      this.MessageBox = data.total
+      this.todolist = data.result
     })
   },
   methods: {
-    handleSetLineChartData(type) {
-      // this.$emit('handleSetLineChartData', type)
+    UserList() {
+      getuser().then((response) => {
+        this.userNumber = response.data.data.total
+      })
 
+      resources(name).then(response => {
+        this.list = response.data.data.result
+        this.total = response.data.data.total
+        let czl = 0
+        let kzl = 0
+        this.list.forEach((item) => {
+          if (item.status === '入住') {
+            czl++
+          } else if (item.status === '闲置') {
+            kzl++
+          }
+        })
+        this.rental_czl = (czl / this.total) * 100 + '%'
+        this.rental_kzl = (kzl / this.total) * 100 + '%'
+        this.listLoading = false
+      })
+    },
+    handleSetLineChartData(type) {
       if (type === 'messages') {
         this.drawer = true
       } else if (type === 'watch') {
         this.watch = true
-        getlist().then((response) => {
-          console.log('13123123', response)
-        })
+      } else if (type === 'newVisitis') {
+        this.$router.push('/list/edit')
       }
     },
     update(item) {
@@ -192,22 +213,49 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        const query = { 'id': item.id }
-        fetchSuccessMsg(query).then(response => {
-          if (response.code === 20000) {
-            this.drawer = true
-            this.todolist = data.list
-            this.$message({
-              type: 'success',
-              message: '添加到待办事项成功！'
+        const myDate = new Date()
+        item.process.push({
+          date: myDate.getFullYear() + '-' + myDate.getMonth() + '-' + myDate.getDate() + '\xa0' + myDate.getHours() + ':' + myDate.getMinutes() + ':' + myDate.getSeconds(),
+          id: '2',
+          status: '1',
+          statusStr: '处理中'
+        })
+        console.log('item', item)
+
+        createTodolist(item).then(res => {
+          if (res.data.code === 200) {
+            deleteMessage({ 'id': item.id }).then((res) => {
+              if (res.data.code === 200) {
+                this.$router.go(0)
+                this.$message({
+                  type: 'success',
+                  message: '添加到待办事项成功！'
+                })
+              }
             })
           }
         })
+
+        // const query = { 'id': item.id }
+        // fetchSuccessMsg(query).then(response => {
+        //   if (response.code === 20000) {
+        //     this.drawer = true
+        //     this.todolist = data.list
+        //     this.$message({
+        //       type: 'success',
+        //       message: '添加到待办事项成功！'
+        //     })
+        //   }
+        // })
       }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消添加'
-        })
+      })
+    },
+    sumbit() {
+      temporary(this.form).then((res) => {
+        if (res.data.code === 200) {
+          this.watch = false
+          this.$message.success('设置临时门禁密码成功')
+        }
       })
     }
   }

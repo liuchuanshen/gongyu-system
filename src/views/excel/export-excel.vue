@@ -19,25 +19,30 @@
           {{ scope.$index }}
         </template>
       </el-table-column>
-      <el-table-column label="Title">
+      <el-table-column label="姓名" align="center">
         <template slot-scope="scope">
-          {{ scope.row.title }}
+          {{ scope.row.xm }}
         </template>
       </el-table-column>
-      <el-table-column label="Author" width="110" align="center">
+      <el-table-column label="性别" align="center">
         <template slot-scope="scope">
-          <el-tag>{{ scope.row.author }}</el-tag>
+          {{ scope.row.xb }}
         </template>
       </el-table-column>
-      <el-table-column label="Readings" width="115" align="center">
+      <el-table-column label="身份证号码" align="center">
         <template slot-scope="scope">
-          {{ scope.row.pageviews }}
+          {{ scope.row.sfzhm }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="Date" width="220">
+      <el-table-column align="center" label="手机号码">
         <template slot-scope="scope">
-          <i class="el-icon-time" />
-          <span>{{ scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          {{ scope.row.sjhm }}
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="状态">
+        <template slot-scope="{ row }">
+          <el-tag v-if="row.status === '已退房'" style="color:red">{{ row.status }}</el-tag>
+          <el-tag v-if="row.status === '入住'">{{ row.status }}</el-tag>
         </template>
       </el-table-column>
     </el-table>
@@ -45,7 +50,7 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/article'
+import { getuser } from '@/api/data'
 import { parseTime } from '@/utils'
 // options components
 import FilenameOption from './components/FilenameOption'
@@ -58,7 +63,7 @@ export default {
   data() {
     return {
       list: null,
-      listLoading: true,
+      listLoading: false,
       downloadLoading: false,
       filename: '',
       autoWidth: true,
@@ -66,21 +71,28 @@ export default {
     }
   },
   created() {
-    this.fetchData()
+    this.getList()
   },
   methods: {
-    fetchData() {
+    // fetchData() {
+    //   this.listLoading = true
+    //   fetchList().then(response => {
+    //     this.list = response.data.items
+    //     this.listLoading = false
+    //   })
+    // },
+    getList(name) {
       this.listLoading = true
-      fetchList().then(response => {
-        this.list = response.data.items
+      getuser(name).then(response => {
+        this.list = response.data.data.result
         this.listLoading = false
       })
     },
     handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['Id', 'Title', 'Author', 'Readings', 'Date']
-        const filterVal = ['id', 'title', 'author', 'pageviews', 'display_time']
+        const tHeader = ['Id', '姓名', '性别', '身份证号码', '手机号码', '状态']
+        const filterVal = ['id', 'xm', 'xb', 'sfzhm', 'sjhm', 'status']
         const list = this.list
         const data = this.formatJson(filterVal, list)
         excel.export_json_to_excel({

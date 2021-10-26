@@ -1,18 +1,22 @@
-import { login, logout, getInfo } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { logout, getInfo } from '@/api/user'
+import { login } from '@/api/data'
+import { getToken, setToken, removeToken,getAvatar,setAvatar,removeAvatar,getName,setName,removeName } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
 const state = {
   token: getToken(),
-  name: '',
-  avatar: '',
+  name: getName(),
+  avatar: getAvatar(),
   introduction: '',
-  roles: []
+  roles: [],
 }
 
 const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
+  },
+  SET_IMG: (state, avatar) => {
+    state.avatar = avatar
   },
   SET_INTRODUCTION: (state, introduction) => {
     state.introduction = introduction
@@ -20,9 +24,9 @@ const mutations = {
   SET_NAME: (state, name) => {
     state.name = name
   },
-  SET_AVATAR: (state, avatar) => {
-    state.avatar = avatar
-  },
+  // SET_AVATAR: (state, avatar) => {
+  //   state.avatar = avatar
+  // },
   SET_ROLES: (state, roles) => {
     state.roles = roles
   }
@@ -31,13 +35,17 @@ const mutations = {
 const actions = {
   // user login
   login({ commit }, userInfo) {
-    console.log('userInfo', userInfo)
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
         const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
+        console.log('data',data.data.result.result[0].name)
+        commit('SET_TOKEN', data.data.token.token)
+        commit('SET_IMG', data.data.img_url)
+        commit('SET_NAME', data.data.result.result[0].name)
+        setToken(data.data.token.token)
+        setAvatar(data.data.img_url)
+        setName(data.data.result.result[0].name)
         resolve()
       }).catch(error => {
         reject(error)
@@ -55,7 +63,8 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        const { roles, name, avatar, introduction } = data
+        // const { roles, name, avatar, introduction } = data
+        const { roles, name, introduction } = data
 
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
@@ -63,8 +72,8 @@ const actions = {
         }
 
         commit('SET_ROLES', roles)
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
+        // commit('SET_NAME', name)
+        // commit('SET_AVATAR', avatar)
         commit('SET_INTRODUCTION', introduction)
         resolve(data)
       }).catch(error => {
@@ -80,8 +89,9 @@ const actions = {
         commit('SET_TOKEN', '')
         commit('SET_ROLES', [])
         removeToken()
+        removeAvatar()
+        removeName()
         resetRouter()
-
         // reset visited views and cached views
         // to fixed https://github.com/PanJiaChen/vue-element-admin/issues/2485
         dispatch('tagsView/delAllViews', null, { root: true })

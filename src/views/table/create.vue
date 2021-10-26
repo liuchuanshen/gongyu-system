@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-input
         v-model="listQuery.name"
-        placeholder="姓名"
+        placeholder="请输入租客姓名"
         style="width: 200px;margin-right: 20px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
@@ -26,7 +26,7 @@
       >
         新增
       </el-button>
-      <el-button
+      <!-- <el-button
         v-waves
         :loading="downloadLoading"
         class="filter-item"
@@ -35,7 +35,7 @@
         @click="handleDownload"
       >
         导出
-      </el-button>
+      </el-button> -->
     </div>
 
     <el-table
@@ -60,14 +60,29 @@
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="时间" align="center">
+      <el-table-column label="房号" align="center">
+        <template slot-scope="{ row }">
+          <span>{{ row.fh }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="入住时间" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.rzsj }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="租约时间" align="center">
+        <template slot-scope="{ row }">
+          <span>{{ row.zysj }}</span>
         </template>
       </el-table-column>
       <el-table-column label="姓名" align="center">
         <template slot-scope="{ row }">
           <span class="link-type" @click="handleUpdate(row)">{{ row.xm }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="性别" align="center">
+        <template slot-scope="{ row }">
+          <span class="link-type">{{ row.xb }}</span>
         </template>
       </el-table-column>
       <el-table-column label="身份证号码" align="center">
@@ -80,6 +95,11 @@
           <span>{{ row.sjhm }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="户型" align="center">
+        <template slot-scope="{ row }">
+          <span>{{ row.hx }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="缴费情况" class-name="status-col">
         <template slot-scope="{ row }">
           <el-tag v-if="row.jfqk === 'y'">
@@ -90,7 +110,12 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column
+      <el-table-column label="状态" class-name="status-col">
+        <template slot-scope="{ row }">
+          <el-tag type="success">{{ row.status }}</el-tag>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column
         label="操作"
         align="center"
         class-name="small-padding fixed-width"
@@ -116,7 +141,7 @@
             >退房</el-button>
           </el-popconfirm>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
 
     <pagination
@@ -127,18 +152,19 @@
       @pagination="getList"
     />
 
-    <el-dialog title="编辑" :visible.sync="dialogFormVisible">
+    <el-dialog title="新增" :visible.sync="dialogFormVisible">
       <el-form
         ref="dataForm"
         :model="temp"
+        :rules="loginRules"
         label-position="left"
-        label-width="70px"
+        label-width="100px"
         style="width: 400px; margin-left:50px;"
       >
         <el-form-item label="ID" prop="id">
           <el-input v-model="temp.id" disabled />
         </el-form-item>
-        <el-form-item label="时间" prop="rzsj">
+        <el-form-item label="入住时间" prop="rzsj">
           <el-date-picker
             v-model="temp.rzsj"
             type="datetime"
@@ -146,8 +172,20 @@
             placeholder="请选择入住时间"
           />
         </el-form-item>
+        <el-form-item label="租约时间" prop="zysj">
+          <el-date-picker
+            v-model="temp.zysj"
+            type="datetime"
+            value-format="yyyy-MM-dd"
+            placeholder="请选择租约时间"
+          />
+        </el-form-item>
         <el-form-item label="姓名" prop="xm">
           <el-input v-model="temp.xm" />
+        </el-form-item>
+        <el-form-item label="性别" prop="xb">
+          <el-radio v-model="temp.xb" label="男">男</el-radio>
+          <el-radio v-model="temp.xb" label="女">女</el-radio>
         </el-form-item>
         <el-form-item label="身份证号码" prop="sfzhm">
           <el-input v-model="temp.sfzhm" />
@@ -155,7 +193,20 @@
         <el-form-item label="手机号码" prop="sjhm">
           <el-input v-model="temp.sjhm" />
         </el-form-item>
-        <el-form-item label="缴费情况" prop="jfqk" style="marginRight:20px">
+        <el-form-item label="户型" prop="hx" style="marginRight:20px">
+          <el-radio v-model="temp.hx" label="单间">单间</el-radio>
+        </el-form-item>
+        <el-form-item label="房号" prop="fh" style="marginRight:20px">
+          <el-select v-model="temp.fh" placeholder="请选择">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="押金缴费情况" prop="jfqk" style="marginRight:20px">
           <el-radio v-model="temp.jfqk" label="y">已交</el-radio>
           <el-radio v-model="temp.jfqk" label="n">未交</el-radio>
         </el-form-item>
@@ -196,11 +247,8 @@
 
 <script>
 import {
-  fetchList,
-  fetchPv,
-  createArticle,
-  updateArticle
-} from '@/api/article'
+  getuser, createUser, updateResources
+} from '@/api/data'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -218,7 +266,7 @@ const calendarTypeOptions = [
 // }, {})
 
 export default {
-  name: 'ComplexTable',
+  name: 'Create',
   components: { Pagination },
   directives: { waves },
   // filters: {
@@ -235,7 +283,57 @@ export default {
   //   }
   // },
   data() {
+    const validateUsername = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请输入姓名'))
+      } else {
+        callback()
+      }
+    }
+    const validateSfzhm = (rule, value, callback) => {
+      const idcardReg = /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/
+      if (idcardReg.test(value)) {
+        // 合法
+        callback()
+      } else {
+        callback(new Error('身份证错误,请重新输入'))
+        this.temp.sfzhm = ''
+      }
+    }
+    const validateSjhm = (rule, value, callback) => {
+      const phoneReg = /^[1](([3][0-9])|([4][5-9])|([5][0-3,5-9])|([6][5,6])|([7][0-8])|([8][0-9])|([9][1,8,9]))[0-9]{8}$/
+      if (phoneReg.test(value)) {
+        // 合法
+        callback()
+      } else {
+        callback(new Error('手机号错误,请重新输入'))
+        this.temp.sjhm = ''
+      }
+    }
     return {
+      loginRules: {
+        xm: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        sfzhm: [{ required: true, trigger: 'blur', validator: validateSfzhm }],
+        sjhm: [{ required: true, trigger: 'blur', validator: validateSjhm }]
+      },
+      options: [
+        {
+          value: '101',
+          label: '101'
+        },
+        {
+          value: '102',
+          label: '102'
+        },
+        {
+          value: '201',
+          label: '201'
+        },
+        {
+          value: '202',
+          label: '202'
+        }
+      ],
       tableKey: 0,
       list: null,
       total: 0,
@@ -254,10 +352,14 @@ export default {
       showReviewer: false,
       temp: {
         id: '',
+        fh: '',
         rzsj: '',
+        zysj: '',
         xm: '',
+        xb: '',
         sfzhm: '',
         sjhm: '',
+        hx: '',
         jfqk: ''
       },
       dialogFormVisible: false,
@@ -293,18 +395,24 @@ export default {
     }, 2000)
   },
   methods: {
-    getList() {
+    getList(name) {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
+
+      if (name === '' || name === undefined) {
+        name = {}
+      } else {
+        name = { 'name': name }
+      }
+      console.log('name', name)
+      getuser(name).then(response => {
+        this.list = response.data.data.result
         this.temp.id = this.list.length + 1
-        this.total = response.data.total
+        this.total = response.data.data.total
         this.listLoading = false
       })
     },
     handleFilter() {
-      this.listQuery.page = 1
-      this.getList()
+      this.getList(this.listQuery.name)
     },
     handleModifyStatus(row, status) {
       this.$message({
@@ -330,11 +438,15 @@ export default {
     resetTemp() {
       this.temp = {
         id: this.temp.id,
+        fh: '',
         rzsj: '',
+        zysj: '',
         xm: '',
         sfzhm: '',
         sjhm: '',
-        jfqk: ''
+        hx: '',
+        jfqk: '',
+        status: '入住'
       }
     },
     handleCreate() {
@@ -348,16 +460,22 @@ export default {
     createData() {
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
-          this.temp.id = parseInt(Math.random() * 100) + 1024
-          createArticle(this.temp).then(() => {
-            this.list.unshift(this.temp)
-            this.dialogFormVisible = false
-            this.$notify({
-              title: 'Success',
-              message: 'Created Successfully',
-              type: 'success',
-              duration: 2000
-            })
+          this.temp.id = this.total + 1
+          createUser(this.temp).then((res) => {
+            if (res.data.code === 200) {
+              updateResources({ 'fh': this.temp.fh, 'status': '入住' }).then((res) => {
+                if (res.data.code === 200) {
+                  this.$notify({
+                    title: '成功',
+                    message: '新增租户成功',
+                    type: 'success',
+                    duration: 5000
+                  })
+                  this.getList()
+                  this.dialogFormVisible = false
+                }
+              })
+            }
           })
         }
       })
@@ -409,8 +527,8 @@ export default {
     handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['ID', 'Date', '姓名', '身份证号码', '缴费情况']
-        const filterVal = ['ID', 'Date', '姓名', '身份证号码', '缴费情况']
+        const tHeader = ['ID', '房号', '入住时间', '租约时间', '姓名', '性别', '身份证号码', '手机号码', '户型', '缴费情况', '状态']
+        const filterVal = ['ID', '房号', '入住时间', '租约时间', '姓名', '性别', '身份证号码', '手机号码', '户型', '缴费情况', '状态']
         const data = this.formatJson(filterVal)
         excel.export_json_to_excel({
           header: tHeader,
