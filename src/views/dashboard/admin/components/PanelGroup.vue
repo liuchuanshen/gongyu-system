@@ -28,7 +28,7 @@
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel" @click="handleSetLineChartData('watch')">
+        <div class="card-panel">
           <div class="card-panel-description-other">
             <div class="card-panel-text">
               出租率{{ rental_czl }}
@@ -37,7 +37,7 @@
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel" @click="handleSetLineChartData('watch')">
+        <div class="card-panel">
           <div class="card-panel-description-other">
             <div class="card-panel-text">
               空置率{{ rental_kzl }}

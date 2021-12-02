@@ -83,7 +83,7 @@
             type="success"
             size="small"
             icon="el-icon-check"
-            @click="look()"
+            @click="look(scope.row)"
           >
             查看
           </el-button>

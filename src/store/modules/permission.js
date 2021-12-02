@@ -31,15 +31,26 @@ export function filterAsyncRoutes(routes, roles) {
     }
   })
 
-
-  console.log('res',res)
+  console.log('res', res)
 
   if (roles[0] === 'editor') {
     res.forEach((item) => {
       if (item.path != '/message') {
         item.hidden = true
-      }else{
-        item.hidden =false
+      } else {
+        item.hidden = false
+      }
+    })
+  }
+
+  if (roles[0] === 'admin') {
+    res.forEach((item) => {
+      console.log('12', item)
+
+      if (item.path != '/message') {
+        item.hidden = false
+      } else {
+        item.hidden = true
       }
     })
   }
@@ -64,17 +75,10 @@ const actions = {
     return new Promise(resolve => {
       let accessedRoutes
       if (roles.includes('admin')) {
-        accessedRoutes = asyncRoutes || []
+        accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
       } else {
         accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
       }
-
-      // if (roles.includes("editor")) {
-      //   accessedRoutes = accessedRoutes[6]
-      // }
-
-      // console.log('accessedRoutes',accessedRoutes)
-
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)
     })

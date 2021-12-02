@@ -115,7 +115,7 @@ async function updateTodolist(colName, query, data) {
     query._id = ObjectId(query._id)
   }
 
-  const result = await col.updateOne(query, { $set: { 'process': data.process }})
+  const result = await col.updateOne(query, { $set: { 'process': data.process, 'status': data.status }})
 
   client.close()
   return result
@@ -150,7 +150,7 @@ async function checkout(colName, query, data) {
  * @param {Object} query    查询条件
  * @param {Object} data     更新操作
  */
- async function updateResources(colName, query, data) {
+async function updateResources(colName, query, data) {
   const { db, client } = await connect()
 
   // 获取集合
@@ -166,7 +166,6 @@ async function checkout(colName, query, data) {
   client.close()
   return result
 }
-
 
 /**
    * 查：查询数据

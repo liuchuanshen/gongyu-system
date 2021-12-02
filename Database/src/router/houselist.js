@@ -92,9 +92,9 @@ router.get('/temporaryList', async(req, res) => {
 // api/houselist/tempupdate
 // 修改临时密码状态
 router.get('/tempupdate', async(req, res) => {
-  const { id, status, doorPsw, housePsw } = req.query
+  const { _id, status, doorPsw, housePsw } = req.query
   try {
-    await mongo.updatetemp(colNamePsw, { 'id': id }, { id, status, doorPsw, housePsw })
+    await mongo.updatetemp(colNamePsw, { '_id': _id }, { _id, status, doorPsw, housePsw })
     res.send(formatData())
   } catch (err) {
     res.send(formatData({ code: 400 }))
@@ -133,21 +133,20 @@ router.get('/login', async(req, res) => {
   // console.log('tokens[username]',tokens[username])
   // console.log('tokens',tokens)
 
-  if(username==='admin'){
+  if (username === 'admin') {
     img_url = 'https://img2.baidu.com/it/u=1155743917,3051821294&fm=26&fmt=auto'
-  }else{
+  } else {
     img_url = 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic.51yuansu.com%2Fpic2%2Fcover%2F00%2F35%2F54%2F5811a45bb0928_610.jpg&refer=http%3A%2F%2Fpic.51yuansu.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1637825799&t=a4a565f2ff7e3ab2baebe930ab65e084'
   }
-
 
   // user为数据库的名字
   const result = await mongo.find(colNameUser, { username, password })
 
-  console.log('result',result)
+  console.log('result', result)
 
   if (result.total > 0) {
     res.send(formatData({
-      data: {token,img_url,result}
+      data: { token, img_url, result }
     }))
   } else {
     res.send(formatData({ code: 401 }))
@@ -157,9 +156,9 @@ router.get('/login', async(req, res) => {
 // api/houselist/createTodolist
 // 新建待办事项数据写进mongoDB
 router.get('/createTodolist', async(req, res) => {
-  const { id, date, houseId, msg, name, process } = req.query
+  const { id, date, houseId, msg, name, process, status } = req.query
   try {
-    await mongo.create(colNameTodolist, { id, date, houseId, msg, name, process })
+    await mongo.create(colNameTodolist, { id, date, houseId, msg, name, process, status })
     res.send(formatData())
   } catch (err) {
     res.send(formatData({ code: 400 }))
@@ -192,9 +191,9 @@ router.get('/getTodolist', async(req, res) => {
 // api/houselist/updateTodolist
 // 修改待办事项状态
 router.get('/updateTodolist', async(req, res) => {
-  const { id, process } = req.query
+  const { id, process, status } = req.query
   try {
-    await mongo.updateTodolist(colNameTodolist, { 'id': id }, { process })
+    await mongo.updateTodolist(colNameTodolist, { 'id': id }, { process, status })
     res.send(formatData())
   } catch (err) {
     res.send(formatData({ code: 400 }))
@@ -236,7 +235,6 @@ router.get('/updateResources', async(req, res) => {
   }
 })
 
-
 // 租户端
 // api/houselist/setMessage
 // 新建留言箱数据
@@ -249,6 +247,5 @@ router.get('/setMessage', async(req, res) => {
     res.send(formatData({ code: 400 }))
   }
 })
-
 
 module.exports = router
