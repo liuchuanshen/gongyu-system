@@ -45,8 +45,6 @@ export function filterAsyncRoutes(routes, roles) {
 
   if (roles[0] === 'admin') {
     res.forEach((item) => {
-      console.log('12', item)
-
       if (item.path != '/message') {
         item.hidden = false
       } else {

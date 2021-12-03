@@ -39,14 +39,23 @@ const actions = {
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
         const { data } = response
-        console.log('data', data.data.result.result[0].name)
-        commit('SET_TOKEN', data.data.token.token)
-        commit('SET_IMG', data.data.img_url)
-        commit('SET_NAME', data.data.result.result[0].name)
-        setToken(data.data.token.token)
-        setAvatar(data.data.img_url)
-        setName(data.data.result.result[0].name)
-        resolve()
+        if(data.data.result.result[0].status==='0'){
+          this.$message({
+            type: 'error',
+            message: '登录失败'
+          })
+        }else{
+          console.log('name', data.data.result.result[0].name)
+          // 触发token
+          commit('SET_TOKEN', data.data.token.token)
+          // 触发头像
+          commit('SET_IMG', data.data.img_url)
+          commit('SET_NAME', data.data.result.result[0].name)
+          setToken(data.data.token.token)
+          setAvatar(data.data.img_url)
+          setName(data.data.result.result[0].name)
+          resolve()
+        }
       }).catch(error => {
         reject(error)
       })

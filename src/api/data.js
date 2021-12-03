@@ -71,3 +71,19 @@ export function updateResources(data) {
 export function setMessage(data) {
   return http.get('/houselist/setMessage', data)
 }
+// 处理token
+export function tokenCreate(data) {
+  return http.get('/houselist/tokenCreate', data)
+}
+
+export function tokenList(data) {
+  return http.get('/houselist/tokenList', data)
+}
+
+export function tokenupdate(data) {
+  return http.get('/houselist/tokenupdate', data)
+}
+
+export function tokenDelet(data) {
+  return http.get('/houselist/tokendelet', data)
+}

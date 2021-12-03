@@ -2,6 +2,7 @@ const express = require('express')
 const mongo = require('../db/mongo')
 const router = express.Router()
 
+
 const { formatData, encrypto } = require('../utils')
 
 const colNameList = 'list'
@@ -116,28 +117,7 @@ router.get('/messagebox', async(req, res) => {
 // 登录功能
 router.get('/login', async(req, res) => {
   const { username, password } = req.query
-
-  const tokens = {
-    admin: {
-      token: 'admin-token'
-    },
-    editor: {
-      token: 'editor-token'
-    }
-  }
-
-  const token = tokens[username]
-  let img_url = ''
-  // console.log('username',username)
-  // console.log('token',token)
-  // console.log('tokens[username]',tokens[username])
-  // console.log('tokens',tokens)
-
-  if (username === 'admin') {
-    img_url = 'https://img2.baidu.com/it/u=1155743917,3051821294&fm=26&fmt=auto'
-  } else {
-    img_url = 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic.51yuansu.com%2Fpic2%2Fcover%2F00%2F35%2F54%2F5811a45bb0928_610.jpg&refer=http%3A%2F%2Fpic.51yuansu.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1637825799&t=a4a565f2ff7e3ab2baebe930ab65e084'
-  }
+ 
 
   // user为数据库的名字
   const result = await mongo.find(colNameUser, { username, password })
@@ -145,6 +125,22 @@ router.get('/login', async(req, res) => {
   console.log('result', result)
 
   if (result.total > 0) {
+
+    const tokens = {
+      admin: {
+        token: 'admin-token'
+      },
+      editor: {
+        token: 'editor-token'
+      }
+    }
+    const token = tokens[result.result[0].role]
+    let img_url = ''
+    if (result.result[0].role === 'admin') {
+      img_url = 'https://img2.baidu.com/it/u=1155743917,3051821294&fm=26&fmt=auto'
+    } else {
+      img_url = 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic.51yuansu.com%2Fpic2%2Fcover%2F00%2F35%2F54%2F5811a45bb0928_610.jpg&refer=http%3A%2F%2Fpic.51yuansu.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1637825799&t=a4a565f2ff7e3ab2baebe930ab65e084'
+    }
     res.send(formatData({
       data: { token, img_url, result }
     }))
@@ -247,5 +243,58 @@ router.get('/setMessage', async(req, res) => {
     res.send(formatData({ code: 400 }))
   }
 })
+
+
+
+// / api/houselist/token
+// 所有登录用户
+router.get('/tokenList', async(req, res) => {
+  let { page = 1, size = 50, sort = 'regtime', total } = req.query
+  const skip = (page - 1) * size
+  const limit = size * 1
+  total = !((total == '0' || total == 'false'))
+  const result = await mongo.find(colNameUser, {}, { skip, limit, sort, total })
+  res.send(formatData({ data: total ? result : result.result }))
+})
+
+
+// 新增登录用户
+router.get('/tokenCreate', async(req, res) => {
+  const { id, username, password, name, role, status } = req.query
+  try {
+    await mongo.create(colNameUser, { id, username, password, name, role, status })
+    res.send(formatData())
+  } catch (err) {
+    res.send(formatData({ code: 400 }))
+  }
+})
+
+// api/houselist/tokenupdate
+// 修改用户登录信息
+router.get('/tokenupdate', async(req, res) => {
+  const { _id, status } = req.query
+
+  try {
+    await mongo.updatetoken(colNameUser, { '_id': _id }, { status })
+    res.send(formatData())
+  } catch (err) {
+    res.send(formatData({ code: 400 }))
+  }
+})
+
+// api/houselist/tokendelet
+// 删除留言箱数据功能
+router.get('/tokendelet', async(req, res) => {
+  const { id } = req.query
+  try {
+    await mongo.remove(colNameUser, { id })
+    res.send(formatData())
+  } catch (err) {
+    res.send(formatData({ code: 400 }))
+  }
+})
+
+
+
 
 module.exports = router

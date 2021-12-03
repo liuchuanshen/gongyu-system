@@ -9,7 +9,7 @@ import Layout from '@/layout'
 /* Router Modules */
 // import componentsRouter from './modules/components'
 // import warningRouter from './modules/warningRouter'
-import chartsRouter from './modules/charts'
+// import chartsRouter from './modules/charts'
 // import tableRouter from "./modules/table";
 import nestedRouter from './modules/nested'
 
@@ -35,16 +35,6 @@ export const constantRoutes = [
     component: () => import('@/views/login/auth-redirect'),
     hidden: true
   },
-  //   {
-  //     path: "/404",
-  //     component: () => import("@/views/error-page/404"),
-  //     hidden: true
-  //   },
-  //   {
-  //     path: "/401",
-  //     component: () => import("@/views/error-page/401"),
-  //     hidden: true
-  //   },
   {
     path: '/',
     component: Layout,
@@ -58,20 +48,20 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/profile',
-    component: Layout,
-    redirect: '/profile/index',
-    hidden: true,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/profile/index'),
-        name: 'Profile',
-        meta: { title: 'Profile', icon: 'user', noCache: true }
-      }
-    ]
-  }
+  // {
+  //   path: '/profile',
+  //   component: Layout,
+  //   redirect: '/profile/index',
+  //   hidden: true,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/profile/index'),
+  //       name: 'Profile',
+  //       meta: { title: 'Profile', icon: 'user', noCache: true }
+  //     }
+  //   ]
+  // }
 ]
 
 /**
@@ -82,37 +72,7 @@ export const asyncRoutes = [
   // warningRouter,
   // componentsRouter,
   nestedRouter,
-  //   {
-  //     path: "/example",
-  //     component: Layout,
-  //     redirect: "/example/list",
-  //     name: "Example",
-  //     meta: {
-  //       title: "Example",
-  //       icon: "el-icon-s-help"
-  //     },
-  //     children: [
-  //       {
-  //         path: "edit/:id(\\d+)",
-  //         component: () => import("@/views/example/edit"),
-  //         name: "EditArticle",
-  //         meta: {
-  //           title: "Edit Article",
-  //           noCache: true,
-  //           activeMenu: "/example/list"
-  //         },
-  //         hidden: true
-  //       },
-  //       {
-  //         path: "list",
-  //         component: () => import("@/views/example/list"),
-  //         name: "ArticleList",
-  //         meta: { title: "住客管理", icon: "list" }
-  //       }
-  //     ]
-  //   },
   {
-    // hidden:false,
     path: '/list',
     name: 'list',
     component: Layout,
@@ -142,52 +102,8 @@ export const asyncRoutes = [
         name: 'Password',
         meta: { title: '密码管理', icon: 'password' }
       }
-      // {
-      //   path: 'tab',
-      //   component: () => import('@/views/tab/index'),
-      //   name: 'Tab',
-      //   meta: { title: '水电费管理', icon: 'tab' }
-      // }
     ]
   },
-
-  // {
-  //   path: '/error',
-  //   component: Layout,
-  //   redirect: 'noRedirect',
-  //   name: 'ErrorPages',
-  //   meta: {
-  //     title: 'Error Pages',
-  //     icon: '404'
-  //   },
-  //   children: [
-  //     {
-  //       path: '401',
-  //       component: () => import('@/views/error-page/401'),
-  //       name: 'Page401',
-  //       meta: { title: '401', noCache: true }
-  //     },
-  //     {
-  //       path: '404',
-  //       component: () => import('@/views/error-page/404'),
-  //       name: 'Page404',
-  //       meta: { title: '404', noCache: true }
-  //     }
-  //   ]
-  // },
-
-  // {
-  //   path: '/error-log',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'log',
-  //       component: () => import('@/views/error-log/index'),
-  //       name: 'ErrorLog',
-  //       meta: { title: 'Error Log', icon: 'bug' }
-  //     }
-  //   ]
-  // },
   {
     path: '/excel',
     component: Layout,
@@ -206,31 +122,24 @@ export const asyncRoutes = [
       }
     ]
   },
-  // {
-  //   path: '/map',
-  //   component: Layout,
-  //   redirect: '/map',
-  //   name: 'map',
-  //   meta: {
-  //     title: '公寓情况',
-  //     icon: 'el-icon-location'
-  //   },
-  //   children: [
-  //     {
-  //       path: '/map/detail',
-  //       component: () => import('@/views/map'),
-  //       name: 'house',
-  //       meta: { title: '公寓情况' }
-  //     }
-  //   ]
-  // },
-  // {
-  //   path: "/message",
-  //   name: "message",
-  //   component: () => import("@/views/message")
-  // },
-  // chartsRouter,
-  // 404 page must be placed at the end !!!
+  {
+    path: '/token',
+    component: Layout,
+    redirect: '/token',
+    name: 'token',
+    meta: {
+      title: '权限管理',
+      icon: 'el-icon-location'
+    },
+    children: [
+      {
+        path: '/token/list',
+        component: () => import('@/views/token'),
+        name: 'house',
+        meta: { title: '权限管理' }
+      }
+    ]
+  },
   { path: '*', redirect: '/404', hidden: true },
   {
     path: '/message',
@@ -261,8 +170,6 @@ const createRouter = () =>
   })
 
 const router = createRouter()
-
-// Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router

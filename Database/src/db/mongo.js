@@ -99,6 +99,29 @@ async function updatetemp(colName, query, data) {
 }
 
 /**
+ * 改：修改用户登录信息
+ * @param {String} colName  集合名称
+ * @param {Object} query    查询条件
+ * @param {Object} data     更新操作
+ */
+ async function updatetoken(colName, query, data) {
+  const { db, client } = await connect()
+
+  // 获取集合
+  const col = db.collection(colName)
+
+  if (typeof query._id === 'string') {
+    // 600a398f7fb70cd40a42e1f9 -> ObjectId("600a398f7fb70cd40a42e1f9")
+    query._id = ObjectId(query._id)
+  }
+
+  const result = await col.updateOne(query, { $set: { 'status': data.status}})
+
+  client.close()
+  return result
+}
+
+/**
  * 改：修改待办事项状态
  * @param {String} colName  集合名称
  * @param {Object} query    查询条件
@@ -227,6 +250,7 @@ module.exports = {
   update,
   find,
   updatetemp,
+  updatetoken,
   updateTodolist,
   checkout,
   updateResources
